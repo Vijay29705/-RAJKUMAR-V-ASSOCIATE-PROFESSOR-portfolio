@@ -1,6 +1,6 @@
-// App.jsx - Updated Navbar with all links visible in desktop + Hero with Photo
-import { useEffect, useMemo, useState, useRef } from "react";
+// App.jsx - Fully corrected & responsive
 import React from "react";
+import { useEffect, useMemo, useState, useRef } from "react";
 import {
   publications,
   organized,
@@ -20,18 +20,16 @@ function App() {
   const [scrolled, setScrolled] = useState(false);
   const heroRef = useRef(null);
 
+  // ---- Years for publication filter ----
   const years = useMemo(
     () => [
       "All",
-      ...new Set(
-        publications
-          .map((item) => item.y)
-          .sort((a, b) => b - a)
-      ),
+      ...new Set(publications.map((item) => item.y).sort((a, b) => b - a)),
     ],
     []
   );
 
+  // ---- Filtered publications ----
   const filteredPublications = useMemo(() => {
     if (activeYear === "All") return publications;
     return publications.filter(
@@ -39,29 +37,40 @@ function App() {
     );
   }, [activeYear]);
 
-  // Scroll progress
+  // ---- Scroll progress + navbar shrink ----
   useEffect(() => {
     const progress = document.querySelector(".progress-fill");
     const handleScroll = () => {
-      const documentHeight =
+      const docHeight =
         document.documentElement.scrollHeight -
         document.documentElement.clientHeight;
-      const percentage =
-        documentHeight > 0 ? (window.scrollY / documentHeight) * 100 : 0;
-      progress.style.width = `${percentage}%`;
-
-      if (window.scrollY > 100) {
-        setScrolled(true);
-      } else {
-        setScrolled(false);
-      }
+      const pct = docHeight > 0 ? (window.scrollY / docHeight) * 100 : 0;
+      if (progress) progress.style.width = `${pct}%`;
+      setScrolled(window.scrollY > 100);
     };
     window.addEventListener("scroll", handleScroll, { passive: true });
     handleScroll();
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Active nav link
+  // ---- Lock body scroll when mobile menu is open ----
+  useEffect(() => {
+    document.body.style.overflow = menuOpen ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [menuOpen]);
+
+  // ---- Close menu on resize up to desktop ----
+  useEffect(() => {
+    const onResize = () => {
+      if (window.innerWidth > 900) setMenuOpen(false);
+    };
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
+
+  // ---- Active nav link via IntersectionObserver ----
   useEffect(() => {
     const sections = document.querySelectorAll("section[id]");
     const links = document.querySelectorAll(".nav-link-desktop");
@@ -70,68 +79,79 @@ function App() {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             links.forEach((link) => link.classList.remove("active"));
-            const activeLink = document.querySelector(
+            const active = document.querySelector(
               `.nav-link-desktop[href="#${entry.target.id}"]`
             );
-            activeLink?.classList.add("active");
+            active?.classList.add("active");
           }
         });
       },
       { threshold: 0.15 }
     );
-    sections.forEach((section) => observer.observe(section));
+    sections.forEach((s) => observer.observe(s));
     return () => observer.disconnect();
   }, []);
 
-  // Reveal animations
+  // ---- Reveal-on-scroll ----
   useEffect(() => {
-    const revealElements = document.querySelectorAll(".reveal");
+    const els = document.querySelectorAll(".reveal");
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("revealed");
-          }
+          if (entry.isIntersecting) entry.target.classList.add("revealed");
         });
       },
       { threshold: 0.1, rootMargin: "0px 0px -50px 0px" }
     );
-    revealElements.forEach((el) => observer.observe(el));
+    els.forEach((el) => observer.observe(el));
     return () => observer.disconnect();
   }, []);
 
-  // Mouse tracking for parallax
+  // ---- Cursor glow (desktop only) ----
   useEffect(() => {
-    const handleMouseMove = (e) => {
+    if (window.matchMedia("(hover: none)").matches) return;
+    const onMove = (e) => {
       setMousePosition({
         x: (e.clientX / window.innerWidth - 0.5) * 2,
         y: (e.clientY / window.innerHeight - 0.5) * 2,
       });
     };
-    window.addEventListener("mousemove", handleMouseMove);
-    return () => window.removeEventListener("mousemove", handleMouseMove);
+    window.addEventListener("mousemove", onMove);
+    return () => window.removeEventListener("mousemove", onMove);
   }, []);
 
-  // Typing animation for hero
+  // ---- Hero typing effect ----
   useEffect(() => {
-    const text = "Wire Arc Additive Manufacturing • Welding Metallurgy • Superalloys";
-    let index = 0;
-    const typingElement = document.querySelector(".typing-text");
+    const text =
+      "Wire Arc Additive Manufacturing • Welding Metallurgy • Superalloys";
+    const el = document.querySelector(".typing-text");
+    if (!el) return;
 
-    if (typingElement) {
-      const interval = setInterval(() => {
-        if (index <= text.length) {
-          typingElement.textContent = text.slice(0, index);
-          index++;
-        } else {
-          clearInterval(interval);
-        }
-      }, 50);
-      return () => clearInterval(interval);
-    }
+    let index = 0;
+    const interval = setInterval(() => {
+      if (index <= text.length) {
+        el.textContent = text.slice(0, index);
+        index++;
+      } else {
+        clearInterval(interval);
+      }
+    }, 50);
+
+    return () => clearInterval(interval);
   }, []);
 
-  const navItems = ["About", "Experience", "Academics", "Research", "Mentorship", "SAE Club", "Workshops", "Contact"];
+  const navItems = [
+    "About",
+    "Experience",
+    "Academics",
+    "Research",
+    "Mentorship",
+    "SAE Club",
+    "Workshops",
+    "Contact",
+  ];
+
+  const slug = (item) => `#${item.toLowerCase().replace(/\s+/g, "-")}`;
 
   return (
     <div className="site">
@@ -144,18 +164,21 @@ function App() {
       <div
         className="cursor-glow"
         style={{
-          transform: `translate(${mousePosition.x * 20}px, ${mousePosition.y * 20}px)`,
+          transform: `translate(${mousePosition.x * 20}px, ${
+            mousePosition.y * 20
+          }px)`,
         }}
       />
 
-      {/* NAVIGATION */}
+      {/* NAVBAR */}
       <header className={`navbar ${scrolled ? "navbar-shrink" : ""}`}>
         <div className="nav-container">
-          {/* Mobile Hamburger */}
+          {/* Hamburger */}
           <button
             className={`hamburger ${menuOpen ? "active" : ""}`}
             onClick={() => setMenuOpen(!menuOpen)}
             aria-label="Toggle navigation"
+            aria-expanded={menuOpen}
           >
             <span></span>
             <span></span>
@@ -171,20 +194,16 @@ function App() {
             </span>
           </a>
 
-          {/* Desktop Navigation Links */}
+          {/* Desktop nav */}
           <nav className="nav-desktop">
             {navItems.map((item) => (
-              <a
-                key={item}
-                href={`#${item.toLowerCase().replace(" ", "-")}`}
-                className="nav-link-desktop"
-              >
+              <a key={item} href={slug(item)} className="nav-link-desktop">
                 {item}
               </a>
             ))}
           </nav>
 
-          {/* Mobile Popup Navigation */}
+          {/* Mobile popup */}
           <nav className={`nav-popup ${menuOpen ? "open" : ""}`}>
             <div className="nav-popup-inner">
               <div className="nav-popup-header">
@@ -192,15 +211,17 @@ function App() {
                 <button
                   className="nav-close"
                   onClick={() => setMenuOpen(false)}
+                  aria-label="Close navigation"
                 >
                   ✕
                 </button>
               </div>
+
               <div className="nav-links">
                 {navItems.map((item, index) => (
                   <a
                     key={item}
-                    href={`#${item.toLowerCase().replace(" ", "-")}`}
+                    href={slug(item)}
                     className="nav-link"
                     onClick={() => setMenuOpen(false)}
                   >
@@ -211,15 +232,16 @@ function App() {
                   </a>
                 ))}
               </div>
+
               <div className="nav-popup-footer">
                 <div className="nav-contact-info">
                   <span>rajkmech42@gmail.com</span>
                   <span>+91 88700 55922</span>
                 </div>
                 <div className="nav-social-links">
-                  <a href="#">in</a>
-                  <a href="#">tw</a>
-                  <a href="#">gh</a>
+                  <a href="#contact">in</a>
+                  <a href="#contact">tw</a>
+                  <a href="#contact">gh</a>
                 </div>
               </div>
             </div>
@@ -228,7 +250,7 @@ function App() {
       </header>
 
       <main id="top">
-        {/* HERO - Animated with Photo */}
+        {/* ======================= HERO ======================= */}
         <section className="hero" ref={heroRef}>
           <div className="hero-background">
             <div className="hero-particles">
@@ -255,25 +277,22 @@ function App() {
           <div className="hero-grid" />
 
           <div className="container hero-container">
-            <div className="hero-topline animate-slide-down">
-
-            </div>
+            <div className="hero-topline animate-slide-down"></div>
 
             <div className="hero-content">
               <div className="hero-number animate-fade-in">01</div>
+
               <div className="hero-main-content">
-
-
                 <div className="hero-title-wrapper animate-slide-up">
                   <h1>
-                    Rajkumar .
-                    <em> V</em>
+                    Rajkumar .<em> V</em>
                   </h1>
                 </div>
 
                 <div className="hero-role-wrapper animate-slide-up-delay">
                   <div className="hero-role">
-                    Associate Professor of Mechanical & Mechatronics Engineering
+                    Associate Professor of Mechanical &amp; Mechatronics
+                    Engineering
                   </div>
                 </div>
 
@@ -283,15 +302,15 @@ function App() {
                 </div>
 
                 <p className="hero-description animate-fade-in-delay-3">
-                  Researching wire arc additive manufacturing, welding metallurgy,
-                  and hot corrosion behaviour of superalloys.
+                  Researching wire arc additive manufacturing, welding
+                  metallurgy, and hot corrosion behaviour of superalloys.
                 </p>
 
                 <div className="hero-line animate-width" />
 
                 <p className="hero-quote animate-fade-in-delay-4">
-                  “Seeking appointment offering challenges and responsibility to
-                  commensurate with teaching skills and experience.”
+                  “Seeking appointment offering challenges and responsibility
+                  to commensurate with teaching skills and experience.”
                 </p>
 
                 <div className="hero-actions animate-fade-in-delay-5">
@@ -308,42 +327,41 @@ function App() {
                 </div>
               </div>
 
-              {/* Hero Photo */}
+              {/* HERO PHOTO */}
               <div className="hero-photo animate-slide-up-delay-2">
                 <div className="hero-photo-wrapper">
-
-                  {/* Main Photo Frame */}
                   <div className="hero-photo-frame">
-                    <img
-                      src="/rajkumar.png"
-                      alt="Dr. V. Rajkumar"
-                      className="hero-profile-image"
-                    />
+                    <div className="hero-photo-placeholder">
+                      <img
+                        src="/rajkumar.png"
+                        alt="Dr. V. Rajkumar"
+                        className="hero-profile-image"
+                        onError={(e) => {
+                          e.currentTarget.style.display = "none";
+                        }}
+                      />
+                    </div>
                   </div>
 
-                  {/* Animated Rings */}
-                  <div className="hero-photo-ring hero-photo-ring-1"></div>
-                  <div className="hero-photo-ring hero-photo-ring-2"></div>
-                  <div className="hero-photo-ring hero-photo-ring-3"></div>
-
-                  {/* Glow */}
-                  <div className="hero-photo-glow"></div>
+                  <div className="hero-photo-ring hero-photo-ring-1" />
+                  <div className="hero-photo-ring hero-photo-ring-2" />
+                  <div className="hero-photo-ring hero-photo-ring-3" />
+                  <div className="hero-photo-glow" />
                 </div>
 
-                {/* Experience Badge */}
                 <div className="hero-photo-badge">
                   <span>✦</span>
                   <span>13+ Years</span>
                 </div>
               </div>
+            </div>
 
-              <div className="hero-stats animate-fade-in-delay-6">
-                <Stat number="13+" label="Years in academia" />
-                <Stat number="18" label="Peer-reviewed publications" />
-                <Stat number="4" label="PhD scholars guided" />
-                <Stat number="99" label="Students mentored" />
-              </div>
-
+            {/* Hero stats — OUTSIDE the grid */}
+            <div className="hero-stats animate-fade-in-delay-6">
+              <Stat number="13+" label="Years in academia" />
+              <Stat number="18" label="Peer-reviewed publications" />
+              <Stat number="4" label="PhD scholars guided" />
+              <Stat number="99" label="Students mentored" />
             </div>
 
             <div className="hero-scroll-down">
@@ -356,8 +374,7 @@ function App() {
           </div>
         </section>
 
-        {/* REST OF THE SECTIONS - Same as before */}
-        {/* ABOUT */}
+        {/* ======================= ABOUT ======================= */}
         <section id="about" className="section about-section">
           <div className="container">
             <SectionHeading
@@ -394,7 +411,7 @@ function App() {
           </div>
         </section>
 
-        {/* EXPERIENCE */}
+        {/* ======================= EXPERIENCE ======================= */}
         <section id="experience" className="section dark-section">
           <div className="container">
             <SectionHeading
@@ -407,9 +424,18 @@ function App() {
 
             <div className="timeline">
               <Experience year="2025 — Present" role="Associate Professor" />
-              <Experience year="2024 — 2025" role="Head of Department, Mechatronics Engineering" />
-              <Experience year="2019 — 2023" role="Associate Professor, Deputy Controller of Examinations" />
-              <Experience year="2019 — 2023" role="Assistant Professor, Assistant Controller of Examinations" />
+              <Experience
+                year="2024 — 2025"
+                role="Head of Department, Mechatronics Engineering"
+              />
+              <Experience
+                year="2019 — 2023"
+                role="Associate Professor, Deputy Controller of Examinations"
+              />
+              <Experience
+                year="2019 — 2023"
+                role="Assistant Professor, Assistant Controller of Examinations"
+              />
               <Experience year="2013 — 2022" role="Assistant Professor" />
             </div>
 
@@ -417,7 +443,11 @@ function App() {
               <div>
                 <p className="mini-title">RESPONSIBILITIES HELD</p>
                 <ul>
-                  <li>Deputy Controller of Examinations — internal exams, end-semester theory pre-process, conduction, valuation, and results publishing</li>
+                  <li>
+                    Deputy Controller of Examinations — internal exams,
+                    end-semester theory pre-process, conduction, valuation, and
+                    results publishing
+                  </li>
                   <li>Value Added Course In-charge</li>
                   <li>CAD Lab In-charge</li>
                 </ul>
@@ -443,7 +473,7 @@ function App() {
           </div>
         </section>
 
-        {/* ACADEMICS */}
+        {/* ======================= ACADEMICS ======================= */}
         <section id="academics" className="section">
           <div className="container">
             <SectionHeading
@@ -500,7 +530,7 @@ function App() {
           </div>
         </section>
 
-        {/* RESEARCH */}
+        {/* ======================= RESEARCH ======================= */}
         <section id="research" className="section research-section">
           <div className="container">
             <SectionHeading
@@ -535,9 +565,15 @@ function App() {
             <div className="publication-list">
               {filteredPublications.map((publication, index) => (
                 <article
-                  className={expandedPub === index ? "publication expanded" : "publication"}
+                  className={
+                    expandedPub === index
+                      ? "publication expanded"
+                      : "publication"
+                  }
                   key={`${publication.y}-${publication.title}`}
-                  onClick={() => setExpandedPub(expandedPub === index ? null : index)}
+                  onClick={() =>
+                    setExpandedPub(expandedPub === index ? null : index)
+                  }
                 >
                   <div className="publication-year">{publication.y}</div>
                   <div className="publication-main">
@@ -552,14 +588,16 @@ function App() {
                     <small>IF</small>
                     <strong>{publication.impact}</strong>
                   </div>
-                  <div className="publication-arrow">{expandedPub === index ? "×" : "+"}</div>
+                  <div className="publication-arrow">
+                    {expandedPub === index ? "×" : "+"}
+                  </div>
                 </article>
               ))}
             </div>
           </div>
         </section>
 
-        {/* MENTORSHIP */}
+        {/* ======================= MENTORSHIP ======================= */}
         <section id="mentorship" className="section">
           <div className="container">
             <SectionHeading
@@ -575,7 +613,13 @@ function App() {
                   <span className="scholar-index">0{index + 1}</span>
                   <h3>{scholar.name}</h3>
                   <p className="registration">Reg. No. {scholar.reg}</p>
-                  <span className={scholar.type === "completed" ? "status completed" : "status progress"}>
+                  <span
+                    className={
+                      scholar.type === "completed"
+                        ? "status completed"
+                        : "status progress"
+                    }
+                  >
                     {scholar.status}
                   </span>
                 </article>
@@ -589,14 +633,17 @@ function App() {
               </div>
               <div>
                 <span className="mini-title">STUDENT PROJECT SCHEME</span>
-                <h3>Design and Fabrication of a Lightweight Stretcher-cum-Wheelchair</h3>
+                <h3>
+                  Design and Fabrication of a Lightweight
+                  Stretcher-cum-Wheelchair
+                </h3>
                 <p>For easy movement of patients.</p>
               </div>
             </div>
           </div>
         </section>
 
-        {/* SAE CLUB */}
+        {/* ======================= SAE CLUB ======================= */}
         <section id="sae-club" className="section dark-section sae-section">
           <div className="container">
             <SectionHeading
@@ -621,7 +668,9 @@ function App() {
                 <div className="sae-contact">
                   <div className="sae-contact-item">
                     <span>Email</span>
-                    <a href="mailto:rajkmech42@gmail.com">rajkmech42@gmail.com</a>
+                    <a href="mailto:rajkmech42@gmail.com">
+                      rajkmech42@gmail.com
+                    </a>
                   </div>
                   <div className="sae-contact-item">
                     <span>Mobile</span>
@@ -629,7 +678,9 @@ function App() {
                   </div>
                   <div className="sae-contact-item">
                     <span>Location</span>
-                    <p>Narasipuram (PO), Thondamuthur Via, Coimbatore – 641109</p>
+                    <p>
+                      Narasipuram (PO), Thondamuthur Via, Coimbatore – 641109
+                    </p>
                   </div>
                 </div>
               </div>
@@ -640,14 +691,16 @@ function App() {
                 <h3>Academic Year-wise SAE Club Involvement</h3>
               </div>
 
-              {saeDetails.map((item, index) => (
+              {saeDetails.map((item) => (
                 <div className="sae-year-card reveal" key={item.year}>
                   <div className="sae-year-badge">{item.year}</div>
                   <div className="sae-year-content">
                     <h4>{item.role}</h4>
                     <p className="sae-department">{item.department}</p>
                     <div className="sae-year-details">
-                      <span className="sae-tag">Designation: {item.designation}</span>
+                      <span className="sae-tag">
+                        Designation: {item.designation}
+                      </span>
                       <span className="sae-tag">Email: {item.email}</span>
                       <span className="sae-tag">Mobile: {item.mobile}</span>
                     </div>
@@ -658,16 +711,27 @@ function App() {
 
             <div className="sae-note">
               <p className="sae-note-text">
-                <strong>Note:</strong> Departmental affiliation varies by academic year —
-                <span className="sae-highlight"> AY 2025–2026: Mechatronics Engineering</span> |
-                <span className="sae-highlight"> AY 2024–2025: Mechanical Engineering</span>
+                <strong>Note:</strong> Departmental affiliation varies by
+                academic year —
+                <span className="sae-highlight">
+                  {" "}
+                  AY 2025–2026: Mechatronics Engineering
+                </span>{" "}
+                |
+                <span className="sae-highlight">
+                  {" "}
+                  AY 2024–2025: Mechanical Engineering
+                </span>
               </p>
             </div>
           </div>
         </section>
 
-        {/* COMPETITIONS */}
-        <section id="competitions" className="section dark-section competition-section">
+        {/* ======================= COMPETITIONS ======================= */}
+        <section
+          id="competitions"
+          className="section dark-section competition-section"
+        >
           <div className="container">
             <SectionHeading
               number="08"
@@ -693,7 +757,7 @@ function App() {
           </div>
         </section>
 
-        {/* WORKSHOPS */}
+        {/* ======================= WORKSHOPS ======================= */}
         <section id="workshops" className="section">
           <div className="container">
             <SectionHeading
@@ -705,14 +769,22 @@ function App() {
 
             <div className="workshop-tabs">
               <button
-                className={activeWorkshop === "organized" ? "workshop-tab active" : "workshop-tab"}
+                className={
+                  activeWorkshop === "organized"
+                    ? "workshop-tab active"
+                    : "workshop-tab"
+                }
                 onClick={() => setActiveWorkshop("organized")}
               >
                 Organized
                 <span>03</span>
               </button>
               <button
-                className={activeWorkshop === "attended" ? "workshop-tab active" : "workshop-tab"}
+                className={
+                  activeWorkshop === "attended"
+                    ? "workshop-tab active"
+                    : "workshop-tab"
+                }
                 onClick={() => setActiveWorkshop("attended")}
               >
                 Attended
@@ -739,7 +811,10 @@ function App() {
             ) : (
               <div className="attended-list">
                 {attended.map((item, index) => (
-                  <article className="attended-item" key={`${item.date}-${item.title}`}>
+                  <article
+                    className="attended-item"
+                    key={`${item.date}-${item.title}`}
+                  >
                     <div className="date">{item.date}</div>
                     <div>
                       <h3>{item.title}</h3>
@@ -753,7 +828,7 @@ function App() {
           </div>
         </section>
 
-        {/* RECORD */}
+        {/* ======================= RECORD ======================= */}
         <section className="section record-section">
           <div className="container">
             <SectionHeading
@@ -796,7 +871,7 @@ function App() {
         </section>
       </main>
 
-      {/* FOOTER */}
+      {/* ======================= FOOTER ======================= */}
       <footer id="contact">
         <div className="container">
           <div className="footer-main">
@@ -807,14 +882,25 @@ function App() {
                 <span>.</span>
               </h2>
               <p className="footer-description">
-                Open to teaching appointments and research collaboration in materials
-                engineering and additive manufacturing.
+                Open to teaching appointments and research collaboration in
+                materials engineering and additive manufacturing.
               </p>
 
               <div className="contact-list">
-                <Contact label="EMAIL" value="rajkmech42@gmail.com" href="mailto:rajkmech42@gmail.com" />
-                <Contact label="PHONE" value="+91 88700 55922" href="tel:+918870055922" />
-                <Contact label="LOCATION" value="Tindivanam, Tamil Nadu, India" />
+                <Contact
+                  label="EMAIL"
+                  value="rajkmech42@gmail.com"
+                  href="mailto:rajkmech42@gmail.com"
+                />
+                <Contact
+                  label="PHONE"
+                  value="+91 88700 55922"
+                  href="tel:+918870055922"
+                />
+                <Contact
+                  label="LOCATION"
+                  value="Tindivanam, Tamil Nadu, India"
+                />
               </div>
             </div>
 
@@ -833,8 +919,6 @@ function App() {
             </div>
           </div>
 
-
-
           <div className="footer-bottom">
             <span>RAJKUMAR V / CIET</span>
             <span>© {new Date().getFullYear()}</span>
@@ -845,7 +929,7 @@ function App() {
   );
 }
 
-/* ---------------- COMPONENTS ---------------- */
+/* ---------------- SUB-COMPONENTS ---------------- */
 
 function Stat({ number, label }) {
   return (
@@ -873,7 +957,9 @@ function Experience({ year, role }) {
   return (
     <article className="experience-item">
       <div className="experience-year">{year}</div>
-      <div className="experience-line"><span /></div>
+      <div className="experience-line">
+        <span />
+      </div>
       <div>
         <h3>{role}</h3>
         <p>Coimbatore Institute of Engineering & Technology, Coimbatore</p>
