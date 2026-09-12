@@ -489,14 +489,14 @@ function App() {
                 institution="Nehru Matriculation School, Mailam"
                 university="State Board"
                 year="2005"
-                score="67.63%"
+                
               />
               <AcademicRow
                 course="HSC"
                 institution="Monfort Matric Higher Secondary School, Tindivanam"
                 university="State Board"
                 year="2007"
-                score="66.25%"
+                
               />
               <AcademicRow
                 course="B.E, Mechanical Engineering"
