@@ -703,7 +703,10 @@ button {
   }
 }
 
-/* Hero Photo */
+/* =========================================
+   HERO PHOTO
+========================================= */
+
 .hero-photo {
   position: relative;
   display: flex;
@@ -713,214 +716,294 @@ button {
   animation: photo-float 6s ease-in-out infinite;
 }
 
+/* Floating Animation */
 @keyframes photo-float {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0);
   }
+
   50% {
     transform: translateY(-12px);
   }
 }
 
+/* =========================================
+   PHOTO WRAPPER
+========================================= */
+
 .hero-photo-wrapper {
   position: relative;
   width: 260px;
   height: 260px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
+
+/* =========================================
+   PHOTO FRAME
+========================================= */
 
 .hero-photo-frame {
-  width: 100%;
-  height: 100%;
+  position: relative;
+  width: 260px;
+  height: 260px;
+
   border-radius: 50%;
   overflow: hidden;
-  border: 2px solid rgba(201, 168, 76, 0.3);
-  position: relative;
+
+  border: 2px solid rgba(255, 255, 255, 0.35);
+
+  background: #111;
+
   z-index: 2;
-  background: radial-gradient(circle at 30% 30%, rgba(201, 168, 76, 0.1), transparent);
+
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.08),
+    0 20px 60px rgba(0, 0, 0, 0.45);
 }
 
-.hero-photo-placeholder {
+/* =========================================
+   ACTUAL PROFILE IMAGE
+========================================= */
+
+.hero-profile-image {
+  display: block;
+
   width: 100%;
   height: 100%;
-  display: grid;
-  place-items: center;
-  background: linear-gradient(135deg, rgba(201, 168, 76, 0.05), rgba(255, 255, 255, 0.02));
+
+  object-fit: cover;
+  object-position: center center;
+
+  border-radius: 50%;
+
+  filter: grayscale(100%) contrast(1.05);
+
+  transition:
+    transform 0.8s ease,
+    filter 0.8s ease;
 }
 
-.hero-photo-placeholder svg {
-  width: 80%;
-  height: 80%;
-  animation: pulse-slow 4s ease-in-out infinite;
+/* Image Hover Effect */
+
+.hero-photo-frame:hover .hero-profile-image {
+  transform: scale(1.06);
+  filter: grayscale(0%) contrast(1.05);
 }
 
-@keyframes pulse-slow {
-  0%, 100% {
-    transform: scale(1);
-    opacity: 0.6;
-  }
-  50% {
-    transform: scale(1.05);
-    opacity: 1;
-  }
-}
+/* =========================================
+   PHOTO RINGS
+========================================= */
 
 .hero-photo-ring {
   position: absolute;
-  border-radius: 50%;
-  border: 1px solid rgba(201, 168, 76, 0.15);
+
   top: 50%;
   left: 50%;
+
+  border-radius: 50%;
+
+  border: 1px solid rgba(255, 255, 255, 0.15);
+
   transform: translate(-50%, -50%);
+
+  pointer-events: none;
+
+  z-index: 1;
+
   animation: ring-spin 20s linear infinite;
 }
+
+/* Ring 1 */
 
 .hero-photo-ring-1 {
   width: 110%;
   height: 110%;
+
   animation-duration: 25s;
-  border-color: rgba(201, 168, 76, 0.08);
+
+  border-color: rgba(255, 255, 255, 0.14);
 }
+
+/* Ring 2 */
 
 .hero-photo-ring-2 {
   width: 125%;
   height: 125%;
+
   animation-duration: 35s;
+
   animation-direction: reverse;
-  border-color: rgba(201, 168, 76, 0.05);
+
+  border-color: rgba(255, 255, 255, 0.09);
 }
+
+/* Ring 3 */
 
 .hero-photo-ring-3 {
   width: 140%;
   height: 140%;
+
   animation-duration: 45s;
-  border-color: rgba(201, 168, 76, 0.03);
+
+  border-color: rgba(255, 255, 255, 0.06);
+
   border-style: dashed;
 }
+
+/* Ring Animation */
 
 @keyframes ring-spin {
   0% {
     transform: translate(-50%, -50%) rotate(0deg);
   }
+
   100% {
     transform: translate(-50%, -50%) rotate(360deg);
   }
 }
 
+/* =========================================
+   PHOTO GLOW
+========================================= */
+
 .hero-photo-glow {
   position: absolute;
+
   width: 150%;
   height: 150%;
+
   top: 50%;
   left: 50%;
+
   transform: translate(-50%, -50%);
-  background: radial-gradient(circle at center, rgba(201, 168, 76, 0.08), transparent 70%);
+
+  background:
+    radial-gradient(
+      circle at center,
+      rgba(255, 255, 255, 0.12),
+      transparent 70%
+    );
+
   border-radius: 50%;
+
   z-index: 0;
+
+  pointer-events: none;
+
   animation: glow-pulse 4s ease-in-out infinite;
 }
 
 @keyframes glow-pulse {
-  0%, 100% {
+  0%,
+  100% {
     transform: translate(-50%, -50%) scale(0.8);
     opacity: 0.5;
   }
+
   50% {
     transform: translate(-50%, -50%) scale(1.2);
     opacity: 1;
   }
 }
 
+/* =========================================
+   EXPERIENCE BADGE
+========================================= */
+
 .hero-photo-badge {
-  margin-top: 16px;
+  margin-top: 20px;
+
   display: flex;
   align-items: center;
+  justify-content: center;
+
   gap: 8px;
-  padding: 6px 16px;
-  border: 1px solid rgba(201, 168, 76, 0.2);
+
+  padding: 7px 18px;
+
+  border: 1px solid rgba(255, 255, 255, 0.18);
+
   border-radius: 30px;
+
+  font-family: Inter, Arial, sans-serif;
+
   font-size: 10px;
   font-weight: 500;
-  color: var(--gray-400);
-  letter-spacing: 0.04em;
-  background: rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(10px);
+
+  color: #d4d4d4;
+
+  letter-spacing: 0.08em;
+
+  text-transform: uppercase;
+
+  background: rgba(255, 255, 255, 0.05);
+
+  backdrop-filter: blur(12px);
+
+  -webkit-backdrop-filter: blur(12px);
+
+  transition:
+    background 0.3s ease,
+    border-color 0.3s ease,
+    transform 0.3s ease;
 }
 
+/* Badge Hover */
+
+.hero-photo-badge:hover {
+  background: rgba(255, 255, 255, 0.09);
+
+  border-color: rgba(255, 255, 255, 0.35);
+
+  transform: translateY(-2px);
+}
+
+/* Badge Icon */
+
 .hero-photo-badge span:first-child {
-  color: var(--gold);
+  color: #ffffff;
+
   font-size: 12px;
+
   animation: sparkle 2s ease-in-out infinite;
 }
 
 @keyframes sparkle {
-  0%, 100% {
+  0%,
+  100% {
     transform: scale(1);
     opacity: 0.6;
   }
+
   50% {
     transform: scale(1.3);
     opacity: 1;
   }
 }
 
-.hero-scroll-down {
-  position: absolute;
-  bottom: 30px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 2;
-}
-
-.scroll-arrow {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-}
-
-.scroll-arrow span {
-  display: block;
-  width: 1px;
-  height: 12px;
-  background: var(--gray-600);
-  animation: scroll-arrow 2s ease-in-out infinite;
-}
-
-.scroll-arrow span:nth-child(1) {
-  height: 16px;
-  animation-delay: 0s;
-}
-
-.scroll-arrow span:nth-child(2) {
-  animation-delay: 0.4s;
-}
-
-.scroll-arrow span:nth-child(3) {
-  animation-delay: 0.8s;
-}
-
-@keyframes scroll-arrow {
-  0%, 100% {
-    transform: scaleY(0.3);
-    opacity: 0.3;
-  }
-  50% {
-    transform: scaleY(1);
-    opacity: 1;
-  }
-}
+/* =========================================
+   HERO STATS
+========================================= */
 
 .hero-stats {
   display: grid;
+
   grid-template-columns: repeat(4, 1fr);
+
   margin-top: 80px;
-  border-top: 1px solid var(--line-dark);
+
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
 }
 
 .stat {
   min-height: 110px;
+
   padding: 24px 20px;
-  border-right: 1px solid var(--line-dark);
+
+  border-right: 1px solid rgba(255, 255, 255, 0.12);
 }
 
 .stat:first-child {
@@ -933,22 +1016,326 @@ button {
 
 .stat strong {
   display: block;
-  color: var(--gold);
+
+  color: #ffffff;
+
   font-size: 30px;
+
   font-weight: 600;
+
   letter-spacing: -0.02em;
 }
 
 .stat span {
   display: block;
+
   margin-top: 6px;
-  color: var(--gray-500);
+
+  color: #888888;
+
   font-size: 11px;
+
   font-weight: 400;
+
   text-transform: uppercase;
+
   letter-spacing: 0.06em;
 }
 
+/* =========================================
+   ANIMATION CLASSES
+========================================= */
+
+.animate-slide-down {
+  animation:
+    slide-down 0.8s cubic-bezier(0.16, 1, 0.3, 1)
+    forwards;
+}
+
+@keyframes slide-down {
+  0% {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Fade */
+
+.animate-fade-in {
+  animation:
+    fade-in 0.8s cubic-bezier(0.16, 1, 0.3, 1)
+    forwards;
+}
+
+.animate-fade-in-delay {
+  animation:
+    fade-in 0.8s cubic-bezier(0.16, 1, 0.3, 1)
+    0.2s forwards;
+
+  opacity: 0;
+}
+
+.animate-fade-in-delay-2 {
+  animation:
+    fade-in 0.8s cubic-bezier(0.16, 1, 0.3, 1)
+    0.4s forwards;
+
+  opacity: 0;
+}
+
+.animate-fade-in-delay-3 {
+  animation:
+    fade-in 0.8s cubic-bezier(0.16, 1, 0.3, 1)
+    0.6s forwards;
+
+  opacity: 0;
+}
+
+.animate-fade-in-delay-4 {
+  animation:
+    fade-in 0.8s cubic-bezier(0.16, 1, 0.3, 1)
+    0.8s forwards;
+
+  opacity: 0;
+}
+
+.animate-fade-in-delay-5 {
+  animation:
+    fade-in 0.8s cubic-bezier(0.16, 1, 0.3, 1)
+    1s forwards;
+
+  opacity: 0;
+}
+
+.animate-fade-in-delay-6 {
+  animation:
+    fade-in 0.8s cubic-bezier(0.16, 1, 0.3, 1)
+    1.2s forwards;
+
+  opacity: 0;
+}
+
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* =========================================
+   SLIDE UP
+========================================= */
+
+.animate-slide-up {
+  animation:
+    slide-up 0.8s cubic-bezier(0.16, 1, 0.3, 1)
+    0.3s forwards;
+
+  opacity: 0;
+}
+
+.animate-slide-up-delay {
+  animation:
+    slide-up 0.8s cubic-bezier(0.16, 1, 0.3, 1)
+    0.5s forwards;
+
+  opacity: 0;
+}
+
+.animate-slide-up-delay-2 {
+  animation:
+    slide-up 0.8s cubic-bezier(0.16, 1, 0.3, 1)
+    0.7s forwards;
+
+  opacity: 0;
+}
+
+@keyframes slide-up {
+  0% {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* =========================================
+   WIDTH ANIMATION
+========================================= */
+
+.animate-width {
+  animation:
+    width-grow 1.2s cubic-bezier(0.16, 1, 0.3, 1)
+    0.7s forwards;
+
+  width: 0;
+}
+
+@keyframes width-grow {
+  0% {
+    width: 0;
+  }
+
+  100% {
+    width: 180px;
+  }
+}
+
+/* =========================================
+   SCROLL INDICATOR
+========================================= */
+
+.hero-scroll-down {
+  position: absolute;
+
+  bottom: 30px;
+  left: 50%;
+
+  transform: translateX(-50%);
+
+  z-index: 2;
+}
+
+.scroll-arrow {
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  gap: 4px;
+}
+
+.scroll-arrow span {
+  display: block;
+
+  width: 1px;
+  height: 12px;
+
+  background: #777777;
+
+  animation: scroll-arrow 2s ease-in-out infinite;
+}
+
+.scroll-arrow span:nth-child(1) {
+  height: 16px;
+
+  animation-delay: 0s;
+}
+
+.scroll-arrow span:nth-child(2) {
+  animation-delay: 0.4s;
+}
+
+.scroll-arrow span:nth-child(3) {
+  animation-delay: 0.8s;
+}
+
+@keyframes scroll-arrow {
+  0%,
+  100% {
+    transform: scaleY(0.3);
+    opacity: 0.3;
+  }
+
+  50% {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+}
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 768px) {
+  .hero-photo-wrapper {
+    width: 220px;
+    height: 220px;
+  }
+
+  .hero-photo-frame {
+    width: 220px;
+    height: 220px;
+  }
+
+  .hero-stats {
+    grid-template-columns: repeat(2, 1fr);
+
+    margin-top: 50px;
+  }
+
+  .stat {
+    min-height: 90px;
+
+    padding: 20px 15px;
+
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  }
+
+  .stat:nth-child(2) {
+    border-right: 0;
+  }
+
+  .stat:nth-child(3) {
+    border-bottom: 0;
+  }
+
+  .stat:nth-child(4) {
+    border-right: 0;
+    border-bottom: 0;
+  }
+
+  .stat strong {
+    font-size: 25px;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-photo-wrapper {
+    width: 190px;
+    height: 190px;
+  }
+
+  .hero-photo-frame {
+    width: 190px;
+    height: 190px;
+  }
+
+  .hero-photo-badge {
+    font-size: 9px;
+    padding: 6px 14px;
+  }
+
+  .hero-stats {
+    margin-top: 40px;
+  }
+
+  .stat {
+    padding: 18px 10px;
+  }
+
+  .stat strong {
+    font-size: 22px;
+  }
+
+  .stat span {
+    font-size: 9px;
+  }
+}
 /* Animation Classes */
 .animate-slide-down {
   animation: slide-down 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;

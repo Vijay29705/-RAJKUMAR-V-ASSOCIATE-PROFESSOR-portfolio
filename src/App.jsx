@@ -49,7 +49,7 @@ function App() {
       const percentage =
         documentHeight > 0 ? (window.scrollY / documentHeight) * 100 : 0;
       progress.style.width = `${percentage}%`;
-      
+
       if (window.scrollY > 100) {
         setScrolled(true);
       } else {
@@ -117,7 +117,7 @@ function App() {
     const text = "Wire Arc Additive Manufacturing • Welding Metallurgy • Superalloys";
     let index = 0;
     const typingElement = document.querySelector(".typing-text");
-    
+
     if (typingElement) {
       const interval = setInterval(() => {
         if (index <= text.length) {
@@ -189,8 +189,8 @@ function App() {
             <div className="nav-popup-inner">
               <div className="nav-popup-header">
                 <span className="nav-popup-title">Navigation</span>
-                <button 
-                  className="nav-close" 
+                <button
+                  className="nav-close"
                   onClick={() => setMenuOpen(false)}
                 >
                   ✕
@@ -233,8 +233,8 @@ function App() {
           <div className="hero-background">
             <div className="hero-particles">
               {[...Array(50)].map((_, i) => (
-                <div 
-                  key={i} 
+                <div
+                  key={i}
                   className="particle"
                   style={{
                     left: `${Math.random() * 100}%`,
@@ -253,17 +253,17 @@ function App() {
           </div>
 
           <div className="hero-grid" />
-          
+
           <div className="container hero-container">
             <div className="hero-topline animate-slide-down">
-            
+
             </div>
 
             <div className="hero-content">
               <div className="hero-number animate-fade-in">01</div>
               <div className="hero-main-content">
-               
-                
+
+
                 <div className="hero-title-wrapper animate-slide-up">
                   <h1>
                     Rajkumar .
@@ -311,42 +311,47 @@ function App() {
               {/* Hero Photo */}
               <div className="hero-photo animate-slide-up-delay-2">
                 <div className="hero-photo-wrapper">
+
+                  {/* Main Photo Frame */}
                   <div className="hero-photo-frame">
-                    <div className="hero-photo-placeholder">
-                      <svg viewBox="0 0 200 200" fill="none">
-                        <circle cx="100" cy="80" r="45" fill="rgba(255,255,255,0.15)"/>
-                        <circle cx="100" cy="200" r="70" fill="rgba(255,255,255,0.08)"/>
-                        <circle cx="100" cy="100" r="90" stroke="rgba(201,168,76,0.2)" strokeWidth="1"/>
-                        <circle cx="100" cy="100" r="80" stroke="rgba(201,168,76,0.1)" strokeWidth="1"/>
-                        <text x="100" y="115" textAnchor="middle" fill="rgba(255,255,255,0.3)" fontSize="14" fontWeight="300" fontFamily="Inter">RV</text>
-                      </svg>
-                    </div>
+                    <img
+                      src="/rajkumar.png"
+                      alt="Dr. V. Rajkumar"
+                      className="hero-profile-image"
+                    />
                   </div>
-                  <div className="hero-photo-ring hero-photo-ring-1" />
-                  <div className="hero-photo-ring hero-photo-ring-2" />
-                  <div className="hero-photo-ring hero-photo-ring-3" />
-                  <div className="hero-photo-glow" />
+
+                  {/* Animated Rings */}
+                  <div className="hero-photo-ring hero-photo-ring-1"></div>
+                  <div className="hero-photo-ring hero-photo-ring-2"></div>
+                  <div className="hero-photo-ring hero-photo-ring-3"></div>
+
+                  {/* Glow */}
+                  <div className="hero-photo-glow"></div>
                 </div>
+
+                {/* Experience Badge */}
                 <div className="hero-photo-badge">
                   <span>✦</span>
                   <span>13+ Years</span>
                 </div>
               </div>
+
+              <div className="hero-stats animate-fade-in-delay-6">
+                <Stat number="13+" label="Years in academia" />
+                <Stat number="18" label="Peer-reviewed publications" />
+                <Stat number="4" label="PhD scholars guided" />
+                <Stat number="99" label="Students mentored" />
+              </div>
+
             </div>
 
-            <div className="hero-stats animate-fade-in-delay-6">
-              <Stat number="13+" label="Years in academia" />
-              <Stat number="18" label="Peer-reviewed publications" />
-              <Stat number="4" label="PhD scholars guided" />
-              <Stat number="99" label="Students mentored" />
-            </div>
-          </div>
-
-          <div className="hero-scroll-down">
-            <div className="scroll-arrow">
-              <span></span>
-              <span></span>
-              <span></span>
+            <div className="hero-scroll-down">
+              <div className="scroll-arrow">
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
             </div>
           </div>
         </section>
@@ -653,8 +658,8 @@ function App() {
 
             <div className="sae-note">
               <p className="sae-note-text">
-                <strong>Note:</strong> Departmental affiliation varies by academic year — 
-                <span className="sae-highlight"> AY 2025–2026: Mechatronics Engineering</span> | 
+                <strong>Note:</strong> Departmental affiliation varies by academic year —
+                <span className="sae-highlight"> AY 2025–2026: Mechatronics Engineering</span> |
                 <span className="sae-highlight"> AY 2024–2025: Mechanical Engineering</span>
               </p>
             </div>
@@ -828,7 +833,7 @@ function App() {
             </div>
           </div>
 
-          
+
 
           <div className="footer-bottom">
             <span>RAJKUMAR V / CIET</span>
