@@ -1490,100 +1490,498 @@ button {
   opacity: 1;
 }
 
-/* ---------- MENTORSHIP ---------- */
+/* =========================================================
+   MENTORSHIP
+========================================================= */
+
+.mentorship-section {
+  position: relative;
+  overflow: hidden;
+}
+
 .scholar-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 16px;
+  margin-bottom: 60px;
 }
+
+@media (max-width: 900px) {
+  .scholar-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .scholar-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Scholar Card */
 
 .scholar-card {
   position: relative;
-  min-height: 200px;
+  min-height: 570px;
   padding: 28px;
-  border: 1px solid var(--line);
-  background: rgba(255, 255, 255, 0.3);
-  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
+
+  background: #ffffff;
+  border: 1px solid #e5e5e5;
+
+  display: flex;
+  flex-direction: column;
+
+  transition:
+    transform 0.45s ease,
+    border-color 0.45s ease,
+    box-shadow 0.45s ease;
 }
 
 .scholar-card:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-hover);
-  border-color: var(--gold);
+  transform: translateY(-8px);
+  border-color: #111111;
+
+  box-shadow:
+    0 25px 60px rgba(0, 0, 0, 0.10);
+}
+
+/* Top */
+
+.scholar-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
 }
 
 .scholar-index {
-  color: var(--gold);
-  font-size: 10px;
-  font-weight: 600;
+  font-family: "Space Mono", monospace;
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  color: #888888;
 }
 
-.scholar-card h3 {
-  margin-top: 32px;
-  font-size: 22px;
-  font-weight: 600;
-}
-
-.registration {
-  margin-top: 4px;
-  color: var(--gray-500);
-  font-size: 10px;
-  font-weight: 500;
-}
+/* Status */
 
 .status {
-  display: inline-block;
-  margin-top: 18px;
-  padding: 4px 10px;
-  border: 1px solid currentColor;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  padding: 7px 11px;
+
+  font-family: "Space Mono", monospace;
   font-size: 9px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.08em;
+
+  border: 1px solid #dddddd;
 }
 
-.status.completed {
-  color: #2d6b4f;
+.status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #111111;
 }
-.status.progress {
-  color: var(--gold);
+
+.status.completed .status-dot {
+  background: #111111;
 }
+
+.status.progress .status-dot {
+  background: #777777;
+}
+
+/* Photo */
+
+.scholar-photo-wrapper {
+  position: relative;
+
+  width: 100%;
+  height: 270px;
+
+  margin-bottom: 26px;
+
+  background: #f3f3f3;
+  overflow: hidden;
+}
+
+.scholar-photo {
+  width: 100%;
+  height: 100%;
+}
+
+.scholar-photo img {
+  width: 100%;
+  height: 100%;
+
+  display: block;
+
+  object-fit: cover;
+  object-position: center;
+
+  filter: grayscale(100%);
+
+  transition:
+    transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1),
+    filter 0.7s ease;
+}
+
+.scholar-card:hover .scholar-photo img {
+  transform: scale(1.045);
+  filter: grayscale(0%);
+}
+
+/* Image Number */
+
+.photo-number {
+  position: absolute;
+  right: 14px;
+  bottom: 14px;
+
+  width: 42px;
+  height: 42px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #ffffff;
+
+  font-family: "Space Mono", monospace;
+  font-size: 10px;
+
+  border: 1px solid #dddddd;
+}
+
+/* Scholar Info */
+
+.scholar-info {
+  flex: 1;
+}
+
+.scholar-label {
+  display: block;
+
+  margin-bottom: 9px;
+
+  font-family: "Space Mono", monospace;
+  font-size: 9px;
+  letter-spacing: 0.16em;
+
+  color: #888888;
+}
+
+.scholar-info h3 {
+  margin: 0;
+
+  font-family: "Space Grotesk", sans-serif;
+  font-size: clamp(22px, 2.2vw, 30px);
+  font-weight: 500;
+  line-height: 1.15;
+
+  color: #111111;
+}
+
+/* Registration */
+
+.registration {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+
+  margin: 15px 0 0;
+
+  font-family: "Space Mono", monospace;
+  font-size: 11px;
+
+  color: #555555;
+}
+
+.registration span {
+  font-size: 8px;
+  letter-spacing: 0.14em;
+  color: #999999;
+}
+
+/* Divider */
+
+.scholar-divider {
+  width: 100%;
+  height: 1px;
+
+  margin: 20px 0;
+
+  background: #e5e5e5;
+}
+
+/* Academic Status */
+
+.scholar-status {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.status-label {
+  font-family: "Space Mono", monospace;
+  font-size: 8px;
+  letter-spacing: 0.14em;
+  color: #999999;
+}
+
+.scholar-status p {
+  margin: 0;
+
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 13px;
+  line-height: 1.5;
+
+  color: #333333;
+}
+
+/* Footer */
+
+.scholar-card-footer {
+  display: flex;
+  justify-content: space-between;
+
+  padding-top: 20px;
+  margin-top: 25px;
+
+  border-top: 1px solid #e5e5e5;
+
+  font-family: "Space Mono", monospace;
+  font-size: 8px;
+  letter-spacing: 0.12em;
+
+  color: #999999;
+}
+
+.scholar-card-footer span:last-child {
+  color: #222222;
+}
+
+
+/* =========================================================
+   FUNDING CARD
+========================================================= */
 
 .funding-card {
+  position: relative;
+
   display: grid;
-  grid-template-columns: 200px 1fr;
-  gap: 50px;
-  margin-top: 50px;
-  padding-top: 40px;
-  border-top: 1px solid var(--line);
+  grid-template-columns: 260px 1fr;
+  gap: 55px;
+
+  margin-top: 80px;
+  padding: 45px;
+
+  background: #111111;
+  color: #ffffff;
+
+  overflow: hidden;
+}
+
+.funding-left {
+  position: relative;
+  z-index: 2;
+
+  padding-right: 40px;
+  border-right: 1px solid #333333;
+}
+
+.funding-label {
+  display: block;
+
+  margin-bottom: 25px;
+
+  font-family: "Space Mono", monospace;
+  font-size: 9px;
+  letter-spacing: 0.16em;
+
+  color: #999999;
 }
 
 .funding-amount {
-  color: var(--gold);
-  font-size: 28px;
-  font-weight: 600;
+  font-family: "Space Grotesk", sans-serif;
+  font-size: clamp(42px, 5vw, 68px);
+  font-weight: 400;
+  line-height: 1;
+
+  letter-spacing: -0.04em;
 }
 
-.funding-amount small {
-  display: block;
-  margin-top: 2px;
-  color: var(--gray-500);
+.funding-sanctioned {
+  display: inline-block;
+
+  margin-top: 15px;
+
+  font-family: "Space Mono", monospace;
   font-size: 9px;
-  font-weight: 500;
+  letter-spacing: 0.12em;
+
+  color: #cccccc;
 }
 
-.funding-card h3 {
-  max-width: 600px;
-  font-size: 22px;
-  font-weight: 600;
+.funding-content {
+  position: relative;
+  z-index: 2;
 }
 
-.funding-card p {
-  margin-top: 4px;
-  color: var(--gray-500);
-  font-size: 13px;
+.mini-title {
+  display: block;
+
+  margin-bottom: 13px;
+
+  font-family: "Space Mono", monospace;
+  font-size: 9px;
+  letter-spacing: 0.15em;
+
+  color: #999999;
 }
 
+.funding-content h3 {
+  max-width: 700px;
+
+  margin: 0;
+
+  font-family: "Space Grotesk", sans-serif;
+  font-size: clamp(25px, 3vw, 40px);
+  font-weight: 400;
+  line-height: 1.15;
+
+  letter-spacing: -0.025em;
+}
+
+.funding-content p {
+  max-width: 620px;
+
+  margin: 20px 0 0;
+
+  font-size: 14px;
+  line-height: 1.7;
+
+  color: #aaaaaa;
+}
+
+.funding-meta {
+  display: flex;
+  gap: 30px;
+
+  margin-top: 30px;
+  padding-top: 18px;
+
+  border-top: 1px solid #333333;
+
+  font-family: "Space Mono", monospace;
+  font-size: 8px;
+  letter-spacing: 0.13em;
+
+  color: #888888;
+}
+
+.funding-meta span:last-child {
+  color: #ffffff;
+}
+
+.funding-mark {
+  position: absolute;
+
+  right: -30px;
+  bottom: -80px;
+
+  font-family: "Source Serif 4", serif;
+  font-size: 280px;
+  line-height: 1;
+
+  color: #1d1d1d;
+
+  pointer-events: none;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 900px) {
+
+  .scholar-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .scholar-card {
+    min-height: auto;
+  }
+
+  .scholar-photo-wrapper {
+    height: 360px;
+  }
+
+  .funding-card {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+
+  .funding-left {
+    padding-right: 0;
+    padding-bottom: 30px;
+
+    border-right: 0;
+    border-bottom: 1px solid #333333;
+  }
+}
+
+
+@media (max-width: 600px) {
+
+  .scholar-grid {
+    gap: 18px;
+    margin-top: 40px;
+  }
+
+  .scholar-card {
+    padding: 18px;
+  }
+
+  .scholar-photo-wrapper {
+    height: 300px;
+    margin-bottom: 22px;
+  }
+
+  .scholar-info h3 {
+    font-size: 24px;
+  }
+
+  .scholar-card-footer {
+    font-size: 7px;
+  }
+
+  .funding-card {
+    margin-top: 50px;
+    padding: 28px 22px;
+  }
+
+  .funding-amount {
+    font-size: 48px;
+  }
+
+  .funding-content h3 {
+    font-size: 25px;
+  }
+
+  .funding-content p {
+    font-size: 13px;
+  }
+
+  .funding-mark {
+    font-size: 180px;
+    right: -20px;
+    bottom: -45px;
+  }
+}
 /* ---------- SAE ---------- */
 .sae-section {
   background: var(--black-2);
@@ -1776,61 +2174,540 @@ button {
   color: var(--gold-light);
   font-weight: 500;
 }
-
-/* ---------- COMPETITIONS ---------- */
+/* ======================= COMPETITIONS - ADVANCED ======================= */
 .competition-section {
-  background: var(--black-2);
+  background: var(--black);
+  position: relative;
+  overflow: hidden;
 }
 
-.competition-list {
+.competition-section::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  opacity: 0.3;
+}
+
+/* Competition Showcase Grid */
+.competition-showcase {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
   border-top: 1px solid var(--line-dark);
 }
 
-.competition {
-  display: grid;
-  grid-template-columns: 70px 1fr 280px;
-  gap: 24px;
-  padding: 28px 0;
+/* Competition Card */
+.competition-card {
+  position: relative;
   border-bottom: 1px solid var(--line-dark);
+  opacity: 0;
+  animation: card-reveal 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-.competition-number {
-  color: var(--gold);
-  font-size: 11px;
-  font-weight: 600;
+@keyframes card-reveal {
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-.competition h3 {
-  color: var(--white);
-  font-size: 18px;
-  font-weight: 600;
+.competition-card-inner {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 40px;
+  padding: 32px 0;
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
 }
 
-.competition p {
-  margin-top: 4px;
+.competition-card:hover .competition-card-inner {
+  padding-left: 16px;
+  padding-right: 16px;
+}
+
+/* Image Section */
+.competition-card-image {
+  position: relative;
+}
+
+.competition-image-wrapper {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  overflow: hidden;
+  border-radius: 12px;
+  background: var(--black-3);
+  border: 1px solid var(--line-dark);
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.competition-card:hover .competition-image-wrapper {
+  border-color: rgba(201, 168, 76, 0.4);
+  transform: scale(1.02);
+}
+
+.competition-image-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  filter: grayscale(20%) brightness(0.9);
+}
+
+.competition-card:hover .competition-image-wrapper img {
+  transform: scale(1.08);
+  filter: grayscale(0%) brightness(1);
+}
+
+.competition-image-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(10, 10, 10, 0) 0%,
+    rgba(10, 10, 10, 0.4) 70%,
+    rgba(10, 10, 10, 0.8) 100%
+  );
+  pointer-events: none;
+}
+
+/* Image Error Fallback */
+.competition-image-wrapper.image-error {
+  background: linear-gradient(135deg, var(--black-3), var(--black-2));
+  display: grid;
+  place-items: center;
+}
+
+.competition-image-wrapper.image-error::after {
+  content: "Image unavailable";
   color: var(--gray-500);
-  font-size: 12px;
-}
-
-.competition span {
-  display: inline-block;
-  margin-top: 6px;
-  color: var(--gold);
-  font-size: 9px;
-  font-weight: 600;
-  text-transform: uppercase;
+  font-size: 11px;
+  font-weight: 500;
   letter-spacing: 0.04em;
 }
 
-.award {
-  padding-left: 20px;
-  border-left: 1px solid var(--line-dark);
-  color: var(--gray-400);
-  font-size: 10px;
-  font-weight: 500;
-  line-height: 1.6;
+/* Image Number */
+.competition-image-number {
+  position: absolute;
+  bottom: 12px;
+  left: 14px;
+  color: var(--white);
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  z-index: 2;
+  font-feature-settings: "tnum";
 }
 
+/* Winner Badge */
+.competition-image-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 10px;
+  background: rgba(201, 168, 76, 0.95);
+  color: var(--black);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border-radius: 4px;
+  backdrop-filter: blur(10px);
+  z-index: 2;
+  animation: badge-pulse 2s ease-in-out infinite;
+}
+
+.competition-image-badge span {
+  font-size: 11px;
+}
+
+@keyframes badge-pulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(201, 168, 76, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 6px rgba(201, 168, 76, 0);
+  }
+}
+
+/* Content Section */
+.competition-card-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 200px;
+}
+
+.competition-card-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.competition-card-index {
+  color: var(--gold);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  font-feature-settings: "tnum";
+}
+
+.competition-card-line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, var(--line-dark), transparent);
+  max-width: 80px;
+}
+
+.competition-card-title {
+  color: var(--white);
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 1.35;
+  letter-spacing: -0.015em;
+  margin-bottom: 14px;
+  transition: color 0.3s ease;
+  max-width: 700px;
+}
+
+.competition-card:hover .competition-card-title {
+  color: var(--gold-light);
+}
+
+.competition-card-venue {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+.venue-icon {
+  color: var(--gold);
+  font-size: 8px;
+  padding-top: 6px;
+  opacity: 0.6;
+}
+
+.competition-card-venue p {
+  color: var(--gray-400);
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.5;
+  max-width: 500px;
+}
+
+/* Footer with Students + Award */
+.competition-card-footer {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr;
+  gap: 24px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line-dark);
+  margin-top: auto;
+}
+
+.competition-students,
+.competition-award {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.students-label,
+.award-label {
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gray-500);
+}
+
+.students-value {
+  color: var(--white);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.award-value {
+  color: var(--gray-300);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.45;
+}
+
+.competition-award.award-winner .award-value {
+  color: var(--gold-light);
+  position: relative;
+}
+
+.competition-award.award-winner .award-value::before {
+  content: "◆ ";
+  color: var(--gold);
+  font-size: 8px;
+  vertical-align: middle;
+  margin-right: 2px;
+}
+
+/* Hover Effect - Gold Accent Line */
+.competition-card::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 0;
+  height: 1px;
+  background: var(--gold);
+  transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.competition-card:hover::before {
+  width: 100%;
+}
+
+/* Winner Card Highlight */
+.competition-winner .competition-card-inner {
+  position: relative;
+}
+
+.competition-winner .competition-card-inner::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(180deg, transparent, var(--gold), transparent);
+  opacity: 0.4;
+}
+
+/* Summary Stats */
+.competition-summary {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  margin-top: 70px;
+  padding-top: 40px;
+  border-top: 1px solid var(--line-dark);
+}
+
+.summary-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.summary-item strong {
+  color: var(--gold);
+  font-size: 38px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  font-feature-settings: "tnum";
+}
+
+.summary-item span {
+  color: var(--gray-500);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* ======================= RESPONSIVE ======================= */
+
+@media (max-width: 900px) {
+  .competition-card-inner {
+    grid-template-columns: 160px 1fr;
+    gap: 28px;
+    padding: 28px 0;
+  }
+
+  .competition-image-wrapper {
+    width: 160px;
+    height: 160px;
+  }
+
+  .competition-card-content {
+    min-height: 160px;
+  }
+
+  .competition-card-title {
+    font-size: 19px;
+  }
+
+  .competition-summary {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+
+  .summary-item strong {
+    font-size: 32px;
+  }
+}
+
+@media (max-width: 640px) {
+  .competition-card-inner {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    padding: 24px 0;
+  }
+
+  .competition-image-wrapper {
+    width: 100%;
+    height: 220px;
+  }
+
+  .competition-image-wrapper img {
+    object-position: center;
+  }
+
+  .competition-image-number {
+    font-size: 28px;
+    bottom: 16px;
+    left: 18px;
+  }
+
+  .competition-card-content {
+    min-height: auto;
+  }
+
+  .competition-card-title {
+    font-size: 17px;
+    line-height: 1.4;
+  }
+
+  .competition-card-venue p {
+    font-size: 12px;
+  }
+
+  .competition-card-footer {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    padding-top: 16px;
+  }
+
+  .competition-summary {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    margin-top: 50px;
+    padding-top: 30px;
+  }
+
+  .summary-item strong {
+    font-size: 28px;
+  }
+
+  .summary-item span {
+    font-size: 9px;
+  }
+}
+
+@media (max-width: 400px) {
+  .competition-image-wrapper {
+    height: 180px;
+  }
+
+  .competition-card-title {
+    font-size: 15px;
+  }
+
+  .competition-summary {
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+
+  .summary-item strong {
+    font-size: 24px;
+  }
+}
+/* ======================= LIGHTBOX ======================= */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.94);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: grid;
+  place-items: center;
+  z-index: 10000;
+  padding: 40px;
+  cursor: zoom-out;
+  animation: lightbox-in 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.lightbox img {
+  max-width: 90vw;
+  max-height: 88vh;
+  object-fit: contain;
+  border-radius: 10px;
+  box-shadow: 0 40px 100px rgba(0, 0, 0, 0.6);
+  animation: lightbox-zoom 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.lightbox-close {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  font-size: 18px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  z-index: 2;
+}
+
+.lightbox-close:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: rotate(90deg);
+}
+
+@keyframes lightbox-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes lightbox-zoom {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@media (max-width: 640px) {
+  .lightbox {
+    padding: 16px;
+  }
+
+  .lightbox-close {
+    top: 12px;
+    right: 12px;
+    width: 38px;
+    height: 38px;
+    font-size: 16px;
+  }
+}
 /* ---------- WORKSHOPS ---------- */
 .workshop-tabs {
   display: flex;

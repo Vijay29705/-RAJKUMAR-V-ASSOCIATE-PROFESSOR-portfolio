@@ -1,6 +1,5 @@
-// App.jsx - Fully corrected & responsive
-import React from "react";
-import { useEffect, useMemo, useState, useRef } from "react";
+// App.jsx - Fully corrected & responsive (with working lightbox)
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   publications,
   organized,
@@ -18,6 +17,10 @@ function App() {
   const [activeWorkshop, setActiveWorkshop] = useState("organized");
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [scrolled, setScrolled] = useState(false);
+
+  // ✅ FIX: lightbox state must be INSIDE the component (top-level)
+  const [lightboxImage, setLightboxImage] = useState(null);
+
   const heroRef = useRef(null);
 
   // ---- Years for publication filter ----
@@ -140,6 +143,16 @@ function App() {
     return () => clearInterval(interval);
   }, []);
 
+  // ---- Escape key closes lightbox ----
+  useEffect(() => {
+    if (!lightboxImage) return;
+    const onKey = (e) => {
+      if (e.key === "Escape") setLightboxImage(null);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [lightboxImage]);
+
   const navItems = [
     "About",
     "Experience",
@@ -164,16 +177,14 @@ function App() {
       <div
         className="cursor-glow"
         style={{
-          transform: `translate(${mousePosition.x * 20}px, ${
-            mousePosition.y * 20
-          }px)`,
+          transform: `translate(${mousePosition.x * 20}px, ${mousePosition.y * 20
+            }px)`,
         }}
       />
 
       {/* NAVBAR */}
       <header className={`navbar ${scrolled ? "navbar-shrink" : ""}`}>
         <div className="nav-container">
-          {/* Hamburger */}
           <button
             className={`hamburger ${menuOpen ? "active" : ""}`}
             onClick={() => setMenuOpen(!menuOpen)}
@@ -185,7 +196,6 @@ function App() {
             <span></span>
           </button>
 
-          {/* Brand */}
           <a href="#top" className="brand">
             <span className="brand-mark">RV</span>
             <span className="brand-text">
@@ -194,7 +204,6 @@ function App() {
             </span>
           </a>
 
-          {/* Desktop nav */}
           <nav className="nav-desktop">
             {navItems.map((item) => (
               <a key={item} href={slug(item)} className="nav-link-desktop">
@@ -203,7 +212,6 @@ function App() {
             ))}
           </nav>
 
-          {/* Mobile popup */}
           <nav className={`nav-popup ${menuOpen ? "open" : ""}`}>
             <div className="nav-popup-inner">
               <div className="nav-popup-header">
@@ -285,7 +293,7 @@ function App() {
               <div className="hero-main-content">
                 <div className="hero-title-wrapper animate-slide-up">
                   <h1>
-                    Rajkumar .<em> V</em>
+                    Rajkumar <em> Vasu</em>
                   </h1>
                 </div>
 
@@ -327,7 +335,6 @@ function App() {
                 </div>
               </div>
 
-              {/* HERO PHOTO */}
               <div className="hero-photo animate-slide-up-delay-2">
                 <div className="hero-photo-wrapper">
                   <div className="hero-photo-frame">
@@ -356,7 +363,6 @@ function App() {
               </div>
             </div>
 
-            {/* Hero stats — OUTSIDE the grid */}
             <div className="hero-stats animate-fade-in-delay-6">
               <Stat number="13+" label="Years in academia" />
               <Stat number="18" label="Peer-reviewed publications" />
@@ -489,14 +495,12 @@ function App() {
                 institution="Nehru Matriculation School, Mailam"
                 university="State Board"
                 year="2005"
-                
               />
               <AcademicRow
                 course="HSC"
                 institution="Monfort Matric Higher Secondary School, Tindivanam"
                 university="State Board"
                 year="2007"
-                
               />
               <AcademicRow
                 course="B.E, Mechanical Engineering"
@@ -598,7 +602,7 @@ function App() {
         </section>
 
         {/* ======================= MENTORSHIP ======================= */}
-        <section id="mentorship" className="section">
+        <section id="mentorship" className="section mentorship-section">
           <div className="container">
             <SectionHeading
               number="06"
@@ -609,36 +613,100 @@ function App() {
 
             <div className="scholar-grid">
               {scholars.map((scholar, index) => (
-                <article className="scholar-card reveal" key={scholar.reg}>
-                  <span className="scholar-index">0{index + 1}</span>
-                  <h3>{scholar.name}</h3>
-                  <p className="registration">Reg. No. {scholar.reg}</p>
-                  <span
-                    className={
-                      scholar.type === "completed"
-                        ? "status completed"
-                        : "status progress"
-                    }
-                  >
-                    {scholar.status}
-                  </span>
+                <article
+                  className={`scholar-card reveal ${scholar.type === "completed"
+                      ? "scholar-completed"
+                      : "scholar-progress"
+                    }`}
+                  key={scholar.reg}
+                >
+                  <div className="scholar-card-top">
+                    <span className="scholar-index">
+                      {String(index + 1).padStart(2, "0")}
+                    </span>
+
+                    <span
+                      className={`status ${scholar.type === "completed"
+                          ? "completed"
+                          : "progress"
+                        }`}
+                    >
+                      <span className="status-dot"></span>
+                      {scholar.type === "completed"
+                        ? "COMPLETED"
+                        : "IN PROGRESS"}
+                    </span>
+                  </div>
+
+                  <div className="scholar-photo-wrapper">
+                    <div className="scholar-photo">
+                      <img
+                        src={scholar.photo}
+                        alt={`${scholar.name} - Research Scholar`}
+                        loading="lazy"
+                      />
+                    </div>
+
+                    <div className="photo-number">
+                      {String(index + 1).padStart(2, "0")}
+                    </div>
+                  </div>
+
+                  <div className="scholar-info">
+                    <span className="scholar-label">RESEARCH SCHOLAR</span>
+
+                    <h3>{scholar.name}</h3>
+
+                    <p className="registration">
+                      <span>REGISTRATION NO.</span>
+                      {scholar.reg}
+                    </p>
+
+                    <div className="scholar-divider"></div>
+
+                    <div className="scholar-status">
+                      <span className="status-label">ACADEMIC STATUS</span>
+                      <p>{scholar.status}</p>
+                    </div>
+                  </div>
+
+                  <div className="scholar-card-footer">
+                    <span>ANNA UNIVERSITY</span>
+                    <span>Ph.D. GUIDESHIP</span>
+                  </div>
                 </article>
               ))}
             </div>
 
-            <div className="funding-card">
-              <div className="funding-amount">
-                ₹13,500
-                <small>TNSCST — SANCTIONED</small>
+            <div className="funding-card reveal">
+              <div className="funding-left">
+                <span className="funding-label">RESEARCH FUNDING</span>
+                <div className="funding-amount">₹13,500</div>
+                <span className="funding-sanctioned">
+                  TNSCST — SANCTIONED
+                </span>
               </div>
-              <div>
+
+              <div className="funding-content">
                 <span className="mini-title">STUDENT PROJECT SCHEME</span>
+
                 <h3>
                   Design and Fabrication of a Lightweight
                   Stretcher-cum-Wheelchair
                 </h3>
-                <p>For easy movement of patients.</p>
+
+                <p>
+                  Development of a lightweight mobility solution designed for
+                  the easy movement and transportation of patients.
+                </p>
+
+                <div className="funding-meta">
+                  <span>PROJECT SUPPORT</span>
+                  <span>TNSCST</span>
+                </div>
               </div>
+
+              <div className="funding-mark">₹</div>
             </div>
           </div>
         </section>
@@ -741,18 +809,118 @@ function App() {
               light
             />
 
-            <div className="competition-list">
-              {competitions.map((competition, index) => (
-                <article className="competition" key={competition.comp}>
-                  <div className="competition-number">0{index + 1}</div>
-                  <div>
-                    <h3>{competition.comp}</h3>
-                    <p>{competition.venue}</p>
-                    <span>{competition.students}</span>
-                  </div>
-                  <div className="award">{competition.award}</div>
-                </article>
-              ))}
+            <div className="competition-showcase">
+              {competitions.map((competition, index) => {
+                const imageMap = {
+                  0: "/Prathyusha Engineering College.png",
+                  1: "/Karpaga Vinayaga College of Engineering and Technology, Chengalpattu.jpg",
+                  2: "/KPR College of Engineering & Technology.png",
+                  3: "/Hindustan College of Engineering and Technology & Karimotor Speedway, Coimbatore.jpg",
+                  4: "/Sri Ramakrishna Institute of Technology, Coimbatore.png",
+                };
+                const imageSrc = imageMap[index];
+
+                const isWinner =
+                  competition.award.toLowerCase().includes("1st") ||
+                  competition.award.toLowerCase().includes("best") ||
+                  competition.award.toLowerCase().includes("award");
+
+                return (
+                  <article
+                    className={`competition-card ${isWinner ? "competition-winner" : ""
+                      }`}
+                    key={competition.comp}
+                    style={{ animationDelay: `${index * 0.1}s` }}
+                  >
+                    <div className="competition-card-inner">
+                      <div className="competition-card-image">
+                        <div className="competition-image-wrapper">
+                          <img
+                            src={imageSrc}
+                            alt={competition.comp}
+                            loading="lazy"
+                            onClick={() => setLightboxImage(imageSrc)}
+                            style={{ cursor: "pointer" }}
+                            onError={(e) => {
+                              e.target.style.display = "none";
+                              e.target.parentElement.classList.add(
+                                "image-error"
+                              );
+                            }}
+                          />
+                          <div className="competition-image-overlay" />
+                          <div className="competition-image-number">
+                            {String(index + 1).padStart(2, "0")}
+                          </div>
+                          {isWinner && (
+                            <div className="competition-image-badge">
+                              <span>★</span> Winner
+                            </div>
+                          )}
+                        </div>
+                      </div>
+
+                      <div className="competition-card-content">
+                        <div className="competition-card-header">
+                          <span className="competition-card-index">
+                            / {String(index + 1).padStart(2, "0")}
+                          </span>
+                          <div className="competition-card-line" />
+                        </div>
+
+                        <h3 className="competition-card-title">
+                          {competition.comp}
+                        </h3>
+
+                        <div className="competition-card-venue">
+                          <span className="venue-icon">◆</span>
+                          <p>{competition.venue}</p>
+                        </div>
+
+                        <div className="competition-card-footer">
+                          <div className="competition-students">
+                            <span className="students-label">
+                              Participants
+                            </span>
+                            <span className="students-value">
+                              {competition.students}
+                            </span>
+                          </div>
+
+                          <div
+                            className={`competition-award ${isWinner ? "award-winner" : ""
+                              }`}
+                          >
+                            <span className="award-label">Achievement</span>
+                            <span className="award-value">
+                              {competition.award}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </article>
+                );
+              })}
+            </div>
+
+            <div className="competition-summary">
+              <div className="summary-item">
+                <strong>05</strong>
+                <span>National Events</span>
+              </div>
+              <div className="summary-item">
+                <strong>99</strong>
+                <span>Students Mentored</span>
+              </div>
+              <div className="summary-item">
+                <strong>04</strong>
+                <span>Awards Won</span>
+              </div>
+              <div className="summary-item">
+                <strong>05</strong>
+                <span>Teams Led</span>
+              </div>
             </div>
           </div>
         </section>
@@ -893,13 +1061,8 @@ function App() {
                   href="mailto:rajkmech42@gmail.com"
                 />
                 <Contact
-                  label="PHONE"
-                  value="+91 88700 55922"
-                  href="tel:+918870055922"
-                />
-                <Contact
                   label="LOCATION"
-                  value="Tindivanam, Tamil Nadu, India"
+                  value="Coimbatore, Tamil Nadu, India"
                 />
               </div>
             </div>
@@ -925,6 +1088,28 @@ function App() {
           </div>
         </div>
       </footer>
+
+      {/* ======================= LIGHTBOX ======================= */}
+      {lightboxImage && (
+        <div
+          className="lightbox"
+          onClick={() => setLightboxImage(null)}
+          role="dialog"
+          aria-modal="true"
+        >
+          <button
+            className="lightbox-close"
+            onClick={(e) => {
+              e.stopPropagation();
+              setLightboxImage(null);
+            }}
+            aria-label="Close"
+          >
+            ✕
+          </button>
+          <img src={lightboxImage} alt="Enlarged view" />
+        </div>
+      )}
     </div>
   );
 }

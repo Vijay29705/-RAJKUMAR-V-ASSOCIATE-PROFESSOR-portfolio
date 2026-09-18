@@ -309,34 +309,36 @@ export const competitions = [
     award: "Best Maneuverability Award",
   },
 ];
-
 export const scholars = [
   {
     name: "V.S. Winstor Jebakumar",
     reg: "17142697190",
     status: "Ph.D completed — 23.02.2024",
     type: "completed",
+    photo: "/scholars/winstor-jebakumar.jpg",
   },
   {
     name: "Prasath S",
     reg: "18142691183",
     status: "Ph.D completed — 02.05.2025",
     type: "completed",
+    photo: "/scholars/prasath-s.jpg",
   },
   {
     name: "Maadesh Kumar K",
     reg: "18142691312",
     status: "Confirmation completed",
     type: "progress",
+    photo: "/scholars/maadesh-kumar.jpg",
   },
   {
     name: "Dhineswaran M",
     reg: "23142697209",
     status: "Confirmation completed",
     type: "progress",
+    photo: "/scholars/scholar-dhineswaran.jpeg",
   },
 ];
-
 // SAE Club Data
 export const saeDetails = [
   {
