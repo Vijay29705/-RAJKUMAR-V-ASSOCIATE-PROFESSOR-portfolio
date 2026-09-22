@@ -1,4 +1,4 @@
-// App.jsx - Fully corrected & responsive (with working lightbox)
+// App.jsx — Production-ready advanced portfolio
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   publications,
@@ -10,6 +10,33 @@ import {
 } from "./data";
 import "./App.css";
 
+/* ============================================================
+   IMAGE MAP — Competition banners (files live in /public)
+   ============================================================ */
+const COMPETITION_IMAGES = {
+  0: "/Prathyusha Engineering College.png",
+  1: "/Karpaga Vinayaga College of Engineering and Technology, Chengalpattu.jpg",
+  2: "/KPR College of Engineering & Technology.png",
+  3: "/Hindustan College of Engineering and Technology & Karimotor Speedway, Coimbatore.jpg",
+  4: "/Sri Ramakrishna Institute of Technology, Coimbatore.png",
+};
+
+const NAV_ITEMS = [
+  "About",
+  "Experience",
+  "Academics",
+  "Research",
+  "Mentorship",
+  "SAE Club",
+  "Workshops",
+  "Contact",
+];
+
+const slug = (item) => `#${item.toLowerCase().replace(/\s+/g, "-")}`;
+
+/* ============================================================
+   APP
+   ============================================================ */
 function App() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeYear, setActiveYear] = useState("All");
@@ -17,46 +44,41 @@ function App() {
   const [activeWorkshop, setActiveWorkshop] = useState("organized");
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [scrolled, setScrolled] = useState(false);
-
-  // ✅ FIX: lightbox state must be INSIDE the component (top-level)
   const [lightboxImage, setLightboxImage] = useState(null);
 
   const heroRef = useRef(null);
 
-  // ---- Years for publication filter ----
+  /* ---------- Derived data ---------- */
   const years = useMemo(
     () => [
       "All",
-      ...new Set(publications.map((item) => item.y).sort((a, b) => b - a)),
+      ...new Set(publications.map((p) => p.y).sort((a, b) => b - a)),
     ],
     []
   );
 
-  // ---- Filtered publications ----
   const filteredPublications = useMemo(() => {
     if (activeYear === "All") return publications;
-    return publications.filter(
-      (publication) => publication.y === Number(activeYear)
-    );
+    return publications.filter((p) => p.y === Number(activeYear));
   }, [activeYear]);
 
-  // ---- Scroll progress + navbar shrink ----
+  /* ---------- Scroll progress + navbar shrink ---------- */
   useEffect(() => {
     const progress = document.querySelector(".progress-fill");
-    const handleScroll = () => {
-      const docHeight =
+    const onScroll = () => {
+      const docH =
         document.documentElement.scrollHeight -
         document.documentElement.clientHeight;
-      const pct = docHeight > 0 ? (window.scrollY / docHeight) * 100 : 0;
+      const pct = docH > 0 ? (window.scrollY / docH) * 100 : 0;
       if (progress) progress.style.width = `${pct}%`;
       setScrolled(window.scrollY > 100);
     };
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    handleScroll();
-    return () => window.removeEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // ---- Lock body scroll when mobile menu is open ----
+  /* ---------- Lock body scroll while menu open ---------- */
   useEffect(() => {
     document.body.style.overflow = menuOpen ? "hidden" : "";
     return () => {
@@ -64,7 +86,7 @@ function App() {
     };
   }, [menuOpen]);
 
-  // ---- Close menu on resize up to desktop ----
+  /* ---------- Close menu on desktop resize ---------- */
   useEffect(() => {
     const onResize = () => {
       if (window.innerWidth > 900) setMenuOpen(false);
@@ -73,7 +95,7 @@ function App() {
     return () => window.removeEventListener("resize", onResize);
   }, []);
 
-  // ---- Active nav link via IntersectionObserver ----
+  /* ---------- Active nav-link ---------- */
   useEffect(() => {
     const sections = document.querySelectorAll("section[id]");
     const links = document.querySelectorAll(".nav-link-desktop");
@@ -81,11 +103,10 @@ function App() {
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            links.forEach((link) => link.classList.remove("active"));
-            const active = document.querySelector(
-              `.nav-link-desktop[href="#${entry.target.id}"]`
-            );
-            active?.classList.add("active");
+            links.forEach((l) => l.classList.remove("active"));
+            document
+              .querySelector(`.nav-link-desktop[href="#${entry.target.id}"]`)
+              ?.classList.add("active");
           }
         });
       },
@@ -95,13 +116,13 @@ function App() {
     return () => observer.disconnect();
   }, []);
 
-  // ---- Reveal-on-scroll ----
+  /* ---------- Reveal on scroll ---------- */
   useEffect(() => {
     const els = document.querySelectorAll(".reveal");
     const observer = new IntersectionObserver(
       (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) entry.target.classList.add("revealed");
+        entries.forEach((e) => {
+          if (e.isIntersecting) e.target.classList.add("revealed");
         });
       },
       { threshold: 0.1, rootMargin: "0px 0px -50px 0px" }
@@ -110,7 +131,7 @@ function App() {
     return () => observer.disconnect();
   }, []);
 
-  // ---- Cursor glow (desktop only) ----
+  /* ---------- Cursor glow (desktop only) ---------- */
   useEffect(() => {
     if (window.matchMedia("(hover: none)").matches) return;
     const onMove = (e) => {
@@ -123,27 +144,25 @@ function App() {
     return () => window.removeEventListener("mousemove", onMove);
   }, []);
 
-  // ---- Hero typing effect ----
+  /* ---------- Hero typing effect ---------- */
   useEffect(() => {
     const text =
       "Wire Arc Additive Manufacturing • Welding Metallurgy • Superalloys";
     const el = document.querySelector(".typing-text");
     if (!el) return;
-
-    let index = 0;
-    const interval = setInterval(() => {
-      if (index <= text.length) {
-        el.textContent = text.slice(0, index);
-        index++;
+    let i = 0;
+    const id = setInterval(() => {
+      if (i <= text.length) {
+        el.textContent = text.slice(0, i);
+        i++;
       } else {
-        clearInterval(interval);
+        clearInterval(id);
       }
     }, 50);
-
-    return () => clearInterval(interval);
+    return () => clearInterval(id);
   }, []);
 
-  // ---- Escape key closes lightbox ----
+  /* ---------- Escape closes lightbox ---------- */
   useEffect(() => {
     if (!lightboxImage) return;
     const onKey = (e) => {
@@ -153,36 +172,23 @@ function App() {
     return () => window.removeEventListener("keydown", onKey);
   }, [lightboxImage]);
 
-  const navItems = [
-    "About",
-    "Experience",
-    "Academics",
-    "Research",
-    "Mentorship",
-    "SAE Club",
-    "Workshops",
-    "Contact",
-  ];
-
-  const slug = (item) => `#${item.toLowerCase().replace(/\s+/g, "-")}`;
-
   return (
     <div className="site">
-      {/* SCROLL PROGRESS */}
-      <div className="progress-track">
+      {/* ============ SCROLL PROGRESS ============ */}
+      <div className="progress-track" aria-hidden="true">
         <div className="progress-fill" />
       </div>
 
-      {/* CURSOR GLOW */}
+      {/* ============ CURSOR GLOW ============ */}
       <div
         className="cursor-glow"
+        aria-hidden="true"
         style={{
-          transform: `translate(${mousePosition.x * 20}px, ${mousePosition.y * 20
-            }px)`,
+          transform: `translate(${mousePosition.x * 20}px, ${mousePosition.y * 20}px)`,
         }}
       />
 
-      {/* NAVBAR */}
+      {/* ============ NAVBAR ============ */}
       <header className={`navbar ${scrolled ? "navbar-shrink" : ""}`}>
         <div className="nav-container">
           <button
@@ -191,12 +197,12 @@ function App() {
             aria-label="Toggle navigation"
             aria-expanded={menuOpen}
           >
-            <span></span>
-            <span></span>
-            <span></span>
+            <span />
+            <span />
+            <span />
           </button>
 
-          <a href="#top" className="brand">
+          <a href="#top" className="brand" aria-label="Home">
             <span className="brand-mark">RV</span>
             <span className="brand-text">
               RAJKUMAR V
@@ -204,15 +210,18 @@ function App() {
             </span>
           </a>
 
-          <nav className="nav-desktop">
-            {navItems.map((item) => (
+          <nav className="nav-desktop" aria-label="Primary">
+            {NAV_ITEMS.map((item) => (
               <a key={item} href={slug(item)} className="nav-link-desktop">
                 {item}
               </a>
             ))}
           </nav>
 
-          <nav className={`nav-popup ${menuOpen ? "open" : ""}`}>
+          <nav
+            className={`nav-popup ${menuOpen ? "open" : ""}`}
+            aria-label="Mobile"
+          >
             <div className="nav-popup-inner">
               <div className="nav-popup-header">
                 <span className="nav-popup-title">Navigation</span>
@@ -226,7 +235,7 @@ function App() {
               </div>
 
               <div className="nav-links">
-                {navItems.map((item, index) => (
+                {NAV_ITEMS.map((item, i) => (
                   <a
                     key={item}
                     href={slug(item)}
@@ -234,7 +243,7 @@ function App() {
                     onClick={() => setMenuOpen(false)}
                   >
                     <span className="nav-link-number">
-                      {String(index + 1).padStart(2, "0")}
+                      {String(i + 1).padStart(2, "0")}
                     </span>
                     {item}
                   </a>
@@ -258,9 +267,11 @@ function App() {
       </header>
 
       <main id="top">
-        {/* ======================= HERO ======================= */}
+        {/* ============================================================
+            HERO
+        ============================================================ */}
         <section className="hero" ref={heroRef}>
-          <div className="hero-background">
+          <div className="hero-background" aria-hidden="true">
             <div className="hero-particles">
               {[...Array(50)].map((_, i) => (
                 <div
@@ -282,18 +293,16 @@ function App() {
             <div className="hero-gradient-orb hero-gradient-orb-3" />
           </div>
 
-          <div className="hero-grid" />
+          <div className="hero-grid" aria-hidden="true" />
 
           <div className="container hero-container">
-            <div className="hero-topline animate-slide-down"></div>
-
             <div className="hero-content">
               <div className="hero-number animate-fade-in">01</div>
 
               <div className="hero-main-content">
                 <div className="hero-title-wrapper animate-slide-up">
                   <h1>
-                    Rajkumar <em> Vasu</em>
+                    Rajkumar <em>Vasu</em>
                   </h1>
                 </div>
 
@@ -305,7 +314,7 @@ function App() {
                 </div>
 
                 <div className="hero-typing-wrapper animate-fade-in-delay-2">
-                  <p className="typing-text"></p>
+                  <p className="typing-text" />
                   <span className="typing-cursor">|</span>
                 </div>
 
@@ -324,7 +333,7 @@ function App() {
                 <div className="hero-actions animate-fade-in-delay-5">
                   <a href="#research" className="hero-button">
                     Explore research
-                    <span>↗</span>
+                    <span aria-hidden="true">↗</span>
                   </a>
                   <div className="hero-scroll-indicator">
                     <span>Scroll</span>
@@ -338,18 +347,15 @@ function App() {
               <div className="hero-photo animate-slide-up-delay-2">
                 <div className="hero-photo-wrapper">
                   <div className="hero-photo-frame">
-                    <div className="hero-photo-placeholder">
-                      <img
-                        src="/rajkumar.png"
-                        alt="Dr. V. Rajkumar"
-                        className="hero-profile-image"
-                        onError={(e) => {
-                          e.currentTarget.style.display = "none";
-                        }}
-                      />
-                    </div>
+                    <img
+                      src="/rajkumar.png"
+                      alt="Dr. V. Rajkumar"
+                      className="hero-profile-image"
+                      onError={(e) => {
+                        e.currentTarget.style.display = "none";
+                      }}
+                    />
                   </div>
-
                   <div className="hero-photo-ring hero-photo-ring-1" />
                   <div className="hero-photo-ring hero-photo-ring-2" />
                   <div className="hero-photo-ring hero-photo-ring-3" />
@@ -357,7 +363,7 @@ function App() {
                 </div>
 
                 <div className="hero-photo-badge">
-                  <span>✦</span>
+                  <span aria-hidden="true">✦</span>
                   <span>13+ Years</span>
                 </div>
               </div>
@@ -370,17 +376,19 @@ function App() {
               <Stat number="99" label="Students mentored" />
             </div>
 
-            <div className="hero-scroll-down">
+            <div className="hero-scroll-down" aria-hidden="true">
               <div className="scroll-arrow">
-                <span></span>
-                <span></span>
-                <span></span>
+                <span />
+                <span />
+                <span />
               </div>
             </div>
           </div>
         </section>
 
-        {/* ======================= ABOUT ======================= */}
+        {/* ============================================================
+            ABOUT
+        ============================================================ */}
         <section id="about" className="section about-section">
           <div className="container">
             <SectionHeading
@@ -406,9 +414,9 @@ function App() {
                   "Adaptable to changes in academic systems and administrative procedures.",
                   "Methodical, focused approach to classroom teaching.",
                   "Approachable, and receptive to new ideas.",
-                ].map((item, index) => (
+                ].map((item, i) => (
                   <div className="principle reveal" key={item}>
-                    <span>0{index + 1}</span>
+                    <span>{String(i + 1).padStart(2, "0")}</span>
                     <p>{item}</p>
                   </div>
                 ))}
@@ -417,7 +425,9 @@ function App() {
           </div>
         </section>
 
-        {/* ======================= EXPERIENCE ======================= */}
+        {/* ============================================================
+            EXPERIENCE
+        ============================================================ */}
         <section id="experience" className="section dark-section">
           <div className="container">
             <SectionHeading
@@ -451,8 +461,8 @@ function App() {
                 <ul>
                   <li>
                     Deputy Controller of Examinations — internal exams,
-                    end-semester theory pre-process, conduction, valuation, and
-                    results publishing
+                    end-semester theory pre-process, conduction, valuation,
+                    and results publishing
                   </li>
                   <li>Value Added Course In-charge</li>
                   <li>CAD Lab In-charge</li>
@@ -470,8 +480,8 @@ function App() {
                     "Unconventional Machining Process",
                     "Kinematics of Machinery",
                     "Power Plant Engineering",
-                  ].map((subject) => (
-                    <span key={subject}>{subject}</span>
+                  ].map((s) => (
+                    <span key={s}>{s}</span>
                   ))}
                 </div>
               </div>
@@ -479,7 +489,9 @@ function App() {
           </div>
         </section>
 
-        {/* ======================= ACADEMICS ======================= */}
+        {/* ============================================================
+            ACADEMICS
+        ============================================================ */}
         <section id="academics" className="section">
           <div className="container">
             <SectionHeading
@@ -534,7 +546,9 @@ function App() {
           </div>
         </section>
 
-        {/* ======================= RESEARCH ======================= */}
+        {/* ============================================================
+            RESEARCH
+        ============================================================ */}
         <section id="research" className="section research-section">
           <div className="container">
             <SectionHeading
@@ -554,7 +568,7 @@ function App() {
                 {years.map((year) => (
                   <button
                     key={year}
-                    className={activeYear === year ? "filter active" : "filter"}
+                    className={`filter ${activeYear === year ? "active" : ""}`}
                     onClick={() => {
                       setActiveYear(year);
                       setExpandedPub(null);
@@ -567,33 +581,27 @@ function App() {
             </div>
 
             <div className="publication-list">
-              {filteredPublications.map((publication, index) => (
+              {filteredPublications.map((p, i) => (
                 <article
-                  className={
-                    expandedPub === index
-                      ? "publication expanded"
-                      : "publication"
-                  }
-                  key={`${publication.y}-${publication.title}`}
-                  onClick={() =>
-                    setExpandedPub(expandedPub === index ? null : index)
-                  }
+                  className={`publication ${expandedPub === i ? "expanded" : ""}`}
+                  key={`${p.y}-${p.title}`}
+                  onClick={() => setExpandedPub(expandedPub === i ? null : i)}
                 >
-                  <div className="publication-year">{publication.y}</div>
+                  <div className="publication-year">{p.y}</div>
                   <div className="publication-main">
-                    <h3>{publication.title}</h3>
-                    <p>{publication.journal}</p>
+                    <h3>{p.title}</h3>
+                    <p>{p.journal}</p>
                     <div className="publication-details">
-                      <span>Publisher: {publication.publisher}</span>
-                      <span>ISSN: {publication.issn}</span>
+                      <span>Publisher: {p.publisher}</span>
+                      <span>ISSN: {p.issn}</span>
                     </div>
                   </div>
                   <div className="publication-impact">
                     <small>IF</small>
-                    <strong>{publication.impact}</strong>
+                    <strong>{p.impact}</strong>
                   </div>
-                  <div className="publication-arrow">
-                    {expandedPub === index ? "×" : "+"}
+                  <div className="publication-arrow" aria-hidden="true">
+                    {expandedPub === i ? "×" : "+"}
                   </div>
                 </article>
               ))}
@@ -601,7 +609,9 @@ function App() {
           </div>
         </section>
 
-        {/* ======================= MENTORSHIP ======================= */}
+        {/* ============================================================
+            MENTORSHIP
+        ============================================================ */}
         <section id="mentorship" className="section mentorship-section">
           <div className="container">
             <SectionHeading
@@ -612,26 +622,17 @@ function App() {
             />
 
             <div className="scholar-grid">
-              {scholars.map((scholar, index) => (
+              {scholars.map((scholar, i) => (
                 <article
-                  className={`scholar-card reveal ${scholar.type === "completed"
-                      ? "scholar-completed"
-                      : "scholar-progress"
-                    }`}
+                  className={`scholar-card reveal scholar-${scholar.type}`}
                   key={scholar.reg}
                 >
                   <div className="scholar-card-top">
                     <span className="scholar-index">
-                      {String(index + 1).padStart(2, "0")}
+                      {String(i + 1).padStart(2, "0")}
                     </span>
-
-                    <span
-                      className={`status ${scholar.type === "completed"
-                          ? "completed"
-                          : "progress"
-                        }`}
-                    >
-                      <span className="status-dot"></span>
+                    <span className={`status ${scholar.type}`}>
+                      <span className="status-dot" />
                       {scholar.type === "completed"
                         ? "COMPLETED"
                         : "IN PROGRESS"}
@@ -639,31 +640,30 @@ function App() {
                   </div>
 
                   <div className="scholar-photo-wrapper">
-                    <div className="scholar-photo">
-                      <img
-                        src={scholar.photo}
-                        alt={`${scholar.name} - Research Scholar`}
-                        loading="lazy"
-                      />
-                    </div>
-
+                    <img
+                      src={scholar.photo}
+                      alt={`${scholar.name} — Research Scholar`}
+                      loading="lazy"
+                      onError={(e) => {
+                        e.currentTarget.style.display = "none";
+                        e.currentTarget.parentElement?.classList.add(
+                          "photo-missing"
+                        );
+                      }}
+                    />
                     <div className="photo-number">
-                      {String(index + 1).padStart(2, "0")}
+                      {String(i + 1).padStart(2, "0")}
                     </div>
                   </div>
 
                   <div className="scholar-info">
                     <span className="scholar-label">RESEARCH SCHOLAR</span>
-
                     <h3>{scholar.name}</h3>
-
                     <p className="registration">
                       <span>REGISTRATION NO.</span>
                       {scholar.reg}
                     </p>
-
-                    <div className="scholar-divider"></div>
-
+                    <div className="scholar-divider" />
                     <div className="scholar-status">
                       <span className="status-label">ACADEMIC STATUS</span>
                       <p>{scholar.status}</p>
@@ -678,6 +678,7 @@ function App() {
               ))}
             </div>
 
+            {/* ---- Funding ---- */}
             <div className="funding-card reveal">
               <div className="funding-left">
                 <span className="funding-label">RESEARCH FUNDING</span>
@@ -689,29 +690,30 @@ function App() {
 
               <div className="funding-content">
                 <span className="mini-title">STUDENT PROJECT SCHEME</span>
-
                 <h3>
                   Design and Fabrication of a Lightweight
                   Stretcher-cum-Wheelchair
                 </h3>
-
                 <p>
                   Development of a lightweight mobility solution designed for
                   the easy movement and transportation of patients.
                 </p>
-
                 <div className="funding-meta">
                   <span>PROJECT SUPPORT</span>
                   <span>TNSCST</span>
                 </div>
               </div>
 
-              <div className="funding-mark">₹</div>
+              <div className="funding-mark" aria-hidden="true">
+                ₹
+              </div>
             </div>
           </div>
         </section>
 
-        {/* ======================= SAE CLUB ======================= */}
+        {/* ============================================================
+            SAE CLUB
+        ============================================================ */}
         <section id="sae-club" className="section dark-section sae-section">
           <div className="container">
             <SectionHeading
@@ -746,9 +748,7 @@ function App() {
                   </div>
                   <div className="sae-contact-item">
                     <span>Location</span>
-                    <p>
-                      Narasipuram (PO), Thondamuthur Via, Coimbatore – 641109
-                    </p>
+                    <p>Narasipuram (PO), Thondamuthur Via, Coimbatore – 641109</p>
                   </div>
                 </div>
               </div>
@@ -795,7 +795,9 @@ function App() {
           </div>
         </section>
 
-        {/* ======================= COMPETITIONS ======================= */}
+        {/* ============================================================
+            COMPETITIONS
+        ============================================================ */}
         <section
           id="competitions"
           className="section dark-section competition-section"
@@ -810,47 +812,37 @@ function App() {
             />
 
             <div className="competition-showcase">
-              {competitions.map((competition, index) => {
-                const imageMap = {
-                  0: "/Prathyusha Engineering College.png",
-                  1: "/Karpaga Vinayaga College of Engineering and Technology, Chengalpattu.jpg",
-                  2: "/KPR College of Engineering & Technology.png",
-                  3: "/Hindustan College of Engineering and Technology & Karimotor Speedway, Coimbatore.jpg",
-                  4: "/Sri Ramakrishna Institute of Technology, Coimbatore.png",
-                };
-                const imageSrc = imageMap[index];
-
+              {competitions.map((c, i) => {
+                const imageSrc = COMPETITION_IMAGES[i];
                 const isWinner =
-                  competition.award.toLowerCase().includes("1st") ||
-                  competition.award.toLowerCase().includes("best") ||
-                  competition.award.toLowerCase().includes("award");
+                  c.award.toLowerCase().includes("1st") ||
+                  c.award.toLowerCase().includes("best") ||
+                  c.award.toLowerCase().includes("award");
 
                 return (
                   <article
-                    className={`competition-card ${isWinner ? "competition-winner" : ""
-                      }`}
-                    key={competition.comp}
-                    style={{ animationDelay: `${index * 0.1}s` }}
+                    className={`competition-card ${isWinner ? "competition-winner" : ""}`}
+                    key={c.comp}
+                    style={{ animationDelay: `${i * 0.08}s` }}
                   >
                     <div className="competition-card-inner">
                       <div className="competition-card-image">
                         <div className="competition-image-wrapper">
                           <img
                             src={imageSrc}
-                            alt={competition.comp}
+                            alt={c.comp}
                             loading="lazy"
                             onClick={() => setLightboxImage(imageSrc)}
-                            style={{ cursor: "pointer" }}
                             onError={(e) => {
-                              e.target.style.display = "none";
-                              e.target.parentElement.classList.add(
+                              e.currentTarget.style.display = "none";
+                              e.currentTarget.parentElement?.classList.add(
                                 "image-error"
                               );
                             }}
                           />
                           <div className="competition-image-overlay" />
                           <div className="competition-image-number">
-                            {String(index + 1).padStart(2, "0")}
+                            {String(i + 1).padStart(2, "0")}
                           </div>
                           {isWinner && (
                             <div className="competition-image-badge">
@@ -863,38 +855,33 @@ function App() {
                       <div className="competition-card-content">
                         <div className="competition-card-header">
                           <span className="competition-card-index">
-                            / {String(index + 1).padStart(2, "0")}
+                            / {String(i + 1).padStart(2, "0")}
                           </span>
                           <div className="competition-card-line" />
                         </div>
 
-                        <h3 className="competition-card-title">
-                          {competition.comp}
-                        </h3>
+                        <h3 className="competition-card-title">{c.comp}</h3>
 
                         <div className="competition-card-venue">
                           <span className="venue-icon">◆</span>
-                          <p>{competition.venue}</p>
+                          <p>{c.venue}</p>
                         </div>
 
                         <div className="competition-card-footer">
                           <div className="competition-students">
-                            <span className="students-label">
-                              Participants
-                            </span>
+                            <span className="students-label">Participants</span>
                             <span className="students-value">
-                              {competition.students}
+                              {c.students}
                             </span>
                           </div>
 
                           <div
-                            className={`competition-award ${isWinner ? "award-winner" : ""
-                              }`}
+                            className={`competition-award ${
+                              isWinner ? "award-winner" : ""
+                            }`}
                           >
                             <span className="award-label">Achievement</span>
-                            <span className="award-value">
-                              {competition.award}
-                            </span>
+                            <span className="award-value">{c.award}</span>
                           </div>
                         </div>
                       </div>
@@ -925,7 +912,9 @@ function App() {
           </div>
         </section>
 
-        {/* ======================= WORKSHOPS ======================= */}
+        {/* ============================================================
+            WORKSHOPS
+        ============================================================ */}
         <section id="workshops" className="section">
           <div className="container">
             <SectionHeading
@@ -937,34 +926,28 @@ function App() {
 
             <div className="workshop-tabs">
               <button
-                className={
-                  activeWorkshop === "organized"
-                    ? "workshop-tab active"
-                    : "workshop-tab"
-                }
+                className={`workshop-tab ${
+                  activeWorkshop === "organized" ? "active" : ""
+                }`}
                 onClick={() => setActiveWorkshop("organized")}
               >
-                Organized
-                <span>03</span>
+                Organized <span>03</span>
               </button>
               <button
-                className={
-                  activeWorkshop === "attended"
-                    ? "workshop-tab active"
-                    : "workshop-tab"
-                }
+                className={`workshop-tab ${
+                  activeWorkshop === "attended" ? "active" : ""
+                }`}
                 onClick={() => setActiveWorkshop("attended")}
               >
-                Attended
-                <span>15</span>
+                Attended <span>15</span>
               </button>
             </div>
 
             {activeWorkshop === "organized" ? (
               <div className="workshop-list">
-                {organized.map((item, index) => (
+                {organized.map((item, i) => (
                   <article className="organized-item" key={item.title}>
-                    <span>0{index + 1}</span>
+                    <span>{String(i + 1).padStart(2, "0")}</span>
                     <div>
                       <h3>{item.title}</h3>
                       <div className="workshop-tags">
@@ -978,7 +961,7 @@ function App() {
               </div>
             ) : (
               <div className="attended-list">
-                {attended.map((item, index) => (
+                {attended.map((item, i) => (
                   <article
                     className="attended-item"
                     key={`${item.date}-${item.title}`}
@@ -988,7 +971,7 @@ function App() {
                       <h3>{item.title}</h3>
                       <p>{item.venue}</p>
                     </div>
-                    <span>{String(index + 1).padStart(2, "0")}</span>
+                    <span>{String(i + 1).padStart(2, "0")}</span>
                   </article>
                 ))}
               </div>
@@ -996,7 +979,9 @@ function App() {
           </div>
         </section>
 
-        {/* ======================= RECORD ======================= */}
+        {/* ============================================================
+            RECORD
+        ============================================================ */}
         <section className="section record-section">
           <div className="container">
             <SectionHeading
@@ -1014,7 +999,6 @@ function App() {
                   "Digital Twin Technologies in Manufacturing Industries — in Efficient Energy Utilization and Emission Reduction Strategies in Plant Operations (2025)",
                 ]}
               />
-
               <RecordColumn
                 title="NPTEL courses completed"
                 items={[
@@ -1025,7 +1009,6 @@ function App() {
                   "Welding Application Technology",
                 ]}
               />
-
               <div className="record-column">
                 <p className="mini-title">PROFESSIONAL MEMBERSHIPS</p>
                 <div className="membership-list">
@@ -1039,15 +1022,16 @@ function App() {
         </section>
       </main>
 
-      {/* ======================= FOOTER ======================= */}
+      {/* ============================================================
+          FOOTER
+      ============================================================ */}
       <footer id="contact">
         <div className="container">
           <div className="footer-main">
             <div>
               <p className="footer-label">11 / CONTACT</p>
               <h2>
-                Let's connect
-                <span>.</span>
+                Let's connect<span>.</span>
               </h2>
               <p className="footer-description">
                 Open to teaching appointments and research collaboration in
@@ -1060,10 +1044,7 @@ function App() {
                   value="rajkmech42@gmail.com"
                   href="mailto:rajkmech42@gmail.com"
                 />
-                <Contact
-                  label="LOCATION"
-                  value="Coimbatore, Tamil Nadu, India"
-                />
+                <Contact label="LOCATION" value="Coimbatore, Tamil Nadu, India" />
               </div>
             </div>
 
@@ -1089,13 +1070,16 @@ function App() {
         </div>
       </footer>
 
-      {/* ======================= LIGHTBOX ======================= */}
+      {/* ============================================================
+          LIGHTBOX
+      ============================================================ */}
       {lightboxImage && (
         <div
           className="lightbox"
           onClick={() => setLightboxImage(null)}
           role="dialog"
           aria-modal="true"
+          aria-label="Image preview"
         >
           <button
             className="lightbox-close"
@@ -1114,7 +1098,9 @@ function App() {
   );
 }
 
-/* ---------------- SUB-COMPONENTS ---------------- */
+/* ============================================================
+   SUB-COMPONENTS
+   ============================================================ */
 
 function Stat({ number, label }) {
   return (
@@ -1127,7 +1113,7 @@ function Stat({ number, label }) {
 
 function SectionHeading({ number, kicker, title, description, light = false }) {
   return (
-    <div className={light ? "section-heading light" : "section-heading"}>
+    <div className={`section-heading ${light ? "light" : ""}`}>
       <div className="section-number">{number}</div>
       <div>
         <p className="section-kicker">{kicker}</p>
