@@ -1,4 +1,4 @@
-// data.js - Updated with SAE Club data
+// data.js - Portfolio Master Data Source
 export const publications = [
   {
     y: 2026,
@@ -309,6 +309,7 @@ export const competitions = [
     award: "Best Maneuverability Award",
   },
 ];
+
 export const scholars = [
   {
     name: "V.S. Winstor Jebakumar",
@@ -339,7 +340,7 @@ export const scholars = [
     photo: "/scholars/scholar-dhineswaran.jpeg",
   },
 ];
-// SAE Club Data
+
 export const saeDetails = [
   {
     year: "AY 2025–2026",
@@ -355,6 +356,6 @@ export const saeDetails = [
     department: "Department of Mechanical Engineering",
     designation: "Associate Professor",
     email: "rajkmech42@gmail.com",
-    mobile: "+91 8870055922",
+    mobile: "+91 88700 55922",
   },
 ];

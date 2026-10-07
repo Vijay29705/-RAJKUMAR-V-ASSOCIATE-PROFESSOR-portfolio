@@ -1,0 +1,12 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom cinematic utilities */
+@layer utilities {
+  .bg-cinematic-dark { @apply bg-gray-900; }
+  .text-primary { @apply text-indigo-300; }
+  .bg-primary { @apply bg-indigo-800; }
+  .border-primary { @apply border-indigo-600; }
+  .shadow-cinematic { @apply shadow-[0_10px_30px_rgba(0,0,0,0.12),_0_4px_12px_rgba(0,0,0,0.08)]; }
+}

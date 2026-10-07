@@ -1,18 +1,17 @@
-// App.jsx — Production-ready advanced portfolio
-import React, { useEffect, useMemo, useRef, useState } from "react";
-import {
-  publications,
-  organized,
-  attended,
-  competitions,
-  scholars,
-  saeDetails,
-} from "./data";
+// App.jsx — Mobile navigation synced version
+import React, { useEffect, useRef, useState, useMemo } from "react";
+import { Mail, Linkedin } from "lucide-react";
 import "./App.css";
 
-/* ============================================================
-   IMAGE MAP — Competition banners (files live in /public)
-   ============================================================ */
+import {
+  publications,
+  scholars,
+  saeDetails,
+  competitions,
+  organized,
+  attended,
+} from "./data.js";
+
 const COMPETITION_IMAGES = {
   0: "/Prathyusha Engineering College.png",
   1: "/Karpaga Vinayaga College of Engineering and Technology, Chengalpattu.jpg",
@@ -28,15 +27,13 @@ const NAV_ITEMS = [
   "Research",
   "Mentorship",
   "SAE Club",
+  "Competitions",
   "Workshops",
   "Contact",
 ];
 
 const slug = (item) => `#${item.toLowerCase().replace(/\s+/g, "-")}`;
 
-/* ============================================================
-   APP
-   ============================================================ */
 function App() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeYear, setActiveYear] = useState("All");
@@ -48,7 +45,6 @@ function App() {
 
   const heroRef = useRef(null);
 
-  /* ---------- Derived data ---------- */
   const years = useMemo(
     () => [
       "All",
@@ -62,7 +58,6 @@ function App() {
     return publications.filter((p) => p.y === Number(activeYear));
   }, [activeYear]);
 
-  /* ---------- Scroll progress + navbar shrink ---------- */
   useEffect(() => {
     const progress = document.querySelector(".progress-fill");
     const onScroll = () => {
@@ -78,7 +73,6 @@ function App() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  /* ---------- Lock body scroll while menu open ---------- */
   useEffect(() => {
     document.body.style.overflow = menuOpen ? "hidden" : "";
     return () => {
@@ -86,7 +80,6 @@ function App() {
     };
   }, [menuOpen]);
 
-  /* ---------- Close menu on desktop resize ---------- */
   useEffect(() => {
     const onResize = () => {
       if (window.innerWidth > 900) setMenuOpen(false);
@@ -95,7 +88,6 @@ function App() {
     return () => window.removeEventListener("resize", onResize);
   }, []);
 
-  /* ---------- Active nav-link ---------- */
   useEffect(() => {
     const sections = document.querySelectorAll("section[id]");
     const links = document.querySelectorAll(".nav-link-desktop");
@@ -116,7 +108,6 @@ function App() {
     return () => observer.disconnect();
   }, []);
 
-  /* ---------- Reveal on scroll ---------- */
   useEffect(() => {
     const els = document.querySelectorAll(".reveal");
     const observer = new IntersectionObserver(
@@ -131,7 +122,6 @@ function App() {
     return () => observer.disconnect();
   }, []);
 
-  /* ---------- Cursor glow (desktop only) ---------- */
   useEffect(() => {
     if (window.matchMedia("(hover: none)").matches) return;
     const onMove = (e) => {
@@ -144,7 +134,6 @@ function App() {
     return () => window.removeEventListener("mousemove", onMove);
   }, []);
 
-  /* ---------- Hero typing effect ---------- */
   useEffect(() => {
     const text =
       "Wire Arc Additive Manufacturing • Welding Metallurgy • Superalloys";
@@ -162,7 +151,6 @@ function App() {
     return () => clearInterval(id);
   }, []);
 
-  /* ---------- Escape closes lightbox ---------- */
   useEffect(() => {
     if (!lightboxImage) return;
     const onKey = (e) => {
@@ -174,12 +162,10 @@ function App() {
 
   return (
     <div className="site">
-      {/* ============ SCROLL PROGRESS ============ */}
       <div className="progress-track" aria-hidden="true">
         <div className="progress-fill" />
       </div>
 
-      {/* ============ CURSOR GLOW ============ */}
       <div
         className="cursor-glow"
         aria-hidden="true"
@@ -188,20 +174,9 @@ function App() {
         }}
       />
 
-      {/* ============ NAVBAR ============ */}
+      {/* NAVBAR */}
       <header className={`navbar ${scrolled ? "navbar-shrink" : ""}`}>
         <div className="nav-container">
-          <button
-            className={`hamburger ${menuOpen ? "active" : ""}`}
-            onClick={() => setMenuOpen(!menuOpen)}
-            aria-label="Toggle navigation"
-            aria-expanded={menuOpen}
-          >
-            <span />
-            <span />
-            <span />
-          </button>
-
           <a href="#top" className="brand" aria-label="Home">
             <span className="brand-mark">RV</span>
             <span className="brand-text">
@@ -218,88 +193,77 @@ function App() {
             ))}
           </nav>
 
-          <nav
-            className={`nav-popup ${menuOpen ? "open" : ""}`}
-            aria-label="Mobile"
+          <button
+            className={`hamburger ${menuOpen ? "active" : ""}`}
+            onClick={() => setMenuOpen(!menuOpen)}
+            aria-label="Toggle navigation"
+            aria-expanded={menuOpen}
           >
-            <div className="nav-popup-inner">
-              <div className="nav-popup-header">
-                <span className="nav-popup-title">Navigation</span>
-                <button
-                  className="nav-close"
-                  onClick={() => setMenuOpen(false)}
-                  aria-label="Close navigation"
-                >
-                  ✕
-                </button>
-              </div>
-
-              <div className="nav-links">
-                {NAV_ITEMS.map((item, i) => (
-                  <a
-                    key={item}
-                    href={slug(item)}
-                    className="nav-link"
-                    onClick={() => setMenuOpen(false)}
-                  >
-                    <span className="nav-link-number">
-                      {String(i + 1).padStart(2, "0")}
-                    </span>
-                    {item}
-                  </a>
-                ))}
-              </div>
-
-              <div className="nav-popup-footer">
-                <div className="nav-contact-info">
-                  <span>rajkmech42@gmail.com</span>
-                  <span>+91 88700 55922</span>
-                </div>
-                <div className="nav-social-links">
-                  <a href="#contact">in</a>
-                  <a href="#contact">tw</a>
-                  <a href="#contact">gh</a>
-                </div>
-              </div>
-            </div>
-          </nav>
+            <span />
+            <span />
+            <span />
+          </button>
         </div>
       </header>
 
-      <main id="top">
-        {/* ============================================================
-            HERO
-        ============================================================ */}
-        <section className="hero" ref={heroRef}>
-          <div className="hero-background" aria-hidden="true">
-            <div className="hero-particles">
-              {[...Array(50)].map((_, i) => (
-                <div
-                  key={i}
-                  className="particle"
-                  style={{
-                    left: `${Math.random() * 100}%`,
-                    top: `${Math.random() * 100}%`,
-                    animationDelay: `${Math.random() * 5}s`,
-                    animationDuration: `${5 + Math.random() * 10}s`,
-                    width: `${2 + Math.random() * 4}px`,
-                    height: `${2 + Math.random() * 4}px`,
-                  }}
-                />
-              ))}
-            </div>
-            <div className="hero-gradient-orb hero-gradient-orb-1" />
-            <div className="hero-gradient-orb hero-gradient-orb-2" />
-            <div className="hero-gradient-orb hero-gradient-orb-3" />
+      {/* MOBILE POPUP OVERLAY */}
+      <div
+        className={`nav-popup ${menuOpen ? "open" : ""}`}
+        aria-label="Mobile Navigation"
+      >
+        <div className="nav-popup-inner">
+          <div className="nav-popup-header">
+            <span className="nav-popup-title">Navigation</span>
+            <button
+              className="nav-close"
+              onClick={() => setMenuOpen(false)}
+              aria-label="Close navigation"
+            >
+              ✕
+            </button>
           </div>
 
+          <div className="nav-links">
+            {NAV_ITEMS.map((item, i) => (
+              <a
+                key={item}
+                href={slug(item)}
+                className="nav-link"
+                onClick={() => setMenuOpen(false)}
+              >
+                <span>{item}</span>
+                <span className="nav-link-number">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+              </a>
+            ))}
+          </div>
+
+          <div className="nav-popup-footer">
+            <div className="nav-contact-info">
+              <span>rajkmech42@gmail.com</span>
+            </div>
+            <div className="nav-social-links">
+              <a href="#contact" onClick={() => setMenuOpen(false)}>
+                LinkedIn
+              </a>
+              <a href="#contact" onClick={() => setMenuOpen(false)}>
+                Email
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <main id="top">
+        {/* HERO */}
+        <section className="hero" ref={heroRef}>
+          <div className="hero-background" aria-hidden="true" />
           <div className="hero-grid" aria-hidden="true" />
 
           <div className="container hero-container">
             <div className="hero-content">
-              <div className="hero-number animate-fade-in">01</div>
-
-              <div className="hero-main-content">
+              <div className="hero-left professional-hero-layout">
                 <div className="hero-title-wrapper animate-slide-up">
                   <h1>
                     Rajkumar <em>Vasu</em>
@@ -356,10 +320,6 @@ function App() {
                       }}
                     />
                   </div>
-                  <div className="hero-photo-ring hero-photo-ring-1" />
-                  <div className="hero-photo-ring hero-photo-ring-2" />
-                  <div className="hero-photo-ring hero-photo-ring-3" />
-                  <div className="hero-photo-glow" />
                 </div>
 
                 <div className="hero-photo-badge">
@@ -375,20 +335,10 @@ function App() {
               <Stat number="4" label="PhD scholars guided" />
               <Stat number="99" label="Students mentored" />
             </div>
-
-            <div className="hero-scroll-down" aria-hidden="true">
-              <div className="scroll-arrow">
-                <span />
-                <span />
-                <span />
-              </div>
-            </div>
           </div>
         </section>
 
-        {/* ============================================================
-            ABOUT
-        ============================================================ */}
+        {/* ABOUT */}
         <section id="about" className="section about-section">
           <div className="container">
             <SectionHeading
@@ -425,11 +375,10 @@ function App() {
           </div>
         </section>
 
-        {/* ============================================================
-            EXPERIENCE
-        ============================================================ */}
+        {/* EXPERIENCE */}
         <section id="experience" className="section dark-section">
-          <div className="container">
+          <div className="dark-section-grid" aria-hidden="true" />
+          <div className="container relative-z">
             <SectionHeading
               number="03"
               kicker="ACADEMIC JOURNEY"
@@ -489,9 +438,7 @@ function App() {
           </div>
         </section>
 
-        {/* ============================================================
-            ACADEMICS
-        ============================================================ */}
+        {/* ACADEMICS */}
         <section id="academics" className="section">
           <div className="container">
             <SectionHeading
@@ -546,9 +493,7 @@ function App() {
           </div>
         </section>
 
-        {/* ============================================================
-            RESEARCH
-        ============================================================ */}
+        {/* RESEARCH */}
         <section id="research" className="section research-section">
           <div className="container">
             <SectionHeading
@@ -609,9 +554,7 @@ function App() {
           </div>
         </section>
 
-        {/* ============================================================
-            MENTORSHIP
-        ============================================================ */}
+        {/* MENTORSHIP */}
         <section id="mentorship" className="section mentorship-section">
           <div className="container">
             <SectionHeading
@@ -646,14 +589,8 @@ function App() {
                       loading="lazy"
                       onError={(e) => {
                         e.currentTarget.style.display = "none";
-                        e.currentTarget.parentElement?.classList.add(
-                          "photo-missing"
-                        );
                       }}
                     />
-                    <div className="photo-number">
-                      {String(i + 1).padStart(2, "0")}
-                    </div>
                   </div>
 
                   <div className="scholar-info">
@@ -678,7 +615,6 @@ function App() {
               ))}
             </div>
 
-            {/* ---- Funding ---- */}
             <div className="funding-card reveal">
               <div className="funding-left">
                 <span className="funding-label">RESEARCH FUNDING</span>
@@ -703,19 +639,14 @@ function App() {
                   <span>TNSCST</span>
                 </div>
               </div>
-
-              <div className="funding-mark" aria-hidden="true">
-                ₹
-              </div>
             </div>
           </div>
         </section>
 
-        {/* ============================================================
-            SAE CLUB
-        ============================================================ */}
+        {/* SAE CLUB */}
         <section id="sae-club" className="section dark-section sae-section">
-          <div className="container">
+          <div className="dark-section-grid" aria-hidden="true" />
+          <div className="container relative-z">
             <SectionHeading
               number="07"
               kicker="STUDENT DEVELOPMENT"
@@ -742,67 +673,32 @@ function App() {
                       rajkmech42@gmail.com
                     </a>
                   </div>
-                  <div className="sae-contact-item">
-                    <span>Mobile</span>
-                    <a href="tel:+918870055922">+91 88700 55922</a>
-                  </div>
-                  <div className="sae-contact-item">
-                    <span>Location</span>
-                    <p>Narasipuram (PO), Thondamuthur Via, Coimbatore – 641109</p>
-                  </div>
+
                 </div>
               </div>
             </div>
 
             <div className="sae-timeline">
-              <div className="sae-timeline-header">
-                <h3>Academic Year-wise SAE Club Involvement</h3>
-              </div>
-
               {saeDetails.map((item) => (
                 <div className="sae-year-card reveal" key={item.year}>
                   <div className="sae-year-badge">{item.year}</div>
                   <div className="sae-year-content">
                     <h4>{item.role}</h4>
                     <p className="sae-department">{item.department}</p>
-                    <div className="sae-year-details">
-                      <span className="sae-tag">
-                        Designation: {item.designation}
-                      </span>
-                      <span className="sae-tag">Email: {item.email}</span>
-                      <span className="sae-tag">Mobile: {item.mobile}</span>
-                    </div>
                   </div>
                 </div>
               ))}
             </div>
-
-            <div className="sae-note">
-              <p className="sae-note-text">
-                <strong>Note:</strong> Departmental affiliation varies by
-                academic year —
-                <span className="sae-highlight">
-                  {" "}
-                  AY 2025–2026: Mechatronics Engineering
-                </span>{" "}
-                |
-                <span className="sae-highlight">
-                  {" "}
-                  AY 2024–2025: Mechanical Engineering
-                </span>
-              </p>
-            </div>
           </div>
         </section>
 
-        {/* ============================================================
-            COMPETITIONS
-        ============================================================ */}
+        {/* COMPETITIONS */}
         <section
           id="competitions"
           className="section dark-section competition-section"
         >
-          <div className="container">
+          <div className="dark-section-grid" aria-hidden="true" />
+          <div className="container relative-z">
             <SectionHeading
               number="08"
               kicker="STUDENT COMPETITIONS"
@@ -814,107 +710,35 @@ function App() {
             <div className="competition-showcase">
               {competitions.map((c, i) => {
                 const imageSrc = COMPETITION_IMAGES[i];
-                const isWinner =
-                  c.award.toLowerCase().includes("1st") ||
-                  c.award.toLowerCase().includes("best") ||
-                  c.award.toLowerCase().includes("award");
-
                 return (
-                  <article
-                    className={`competition-card ${isWinner ? "competition-winner" : ""}`}
-                    key={c.comp}
-                    style={{ animationDelay: `${i * 0.08}s` }}
-                  >
-                    <div className="competition-card-inner">
-                      <div className="competition-card-image">
-                        <div className="competition-image-wrapper">
-                          <img
-                            src={imageSrc}
-                            alt={c.comp}
-                            loading="lazy"
-                            onClick={() => setLightboxImage(imageSrc)}
-                            onError={(e) => {
-                              e.currentTarget.style.display = "none";
-                              e.currentTarget.parentElement?.classList.add(
-                                "image-error"
-                              );
-                            }}
-                          />
-                          <div className="competition-image-overlay" />
-                          <div className="competition-image-number">
-                            {String(i + 1).padStart(2, "0")}
-                          </div>
-                          {isWinner && (
-                            <div className="competition-image-badge">
-                              <span>★</span> Winner
-                            </div>
-                          )}
-                        </div>
-                      </div>
-
-                      <div className="competition-card-content">
-                        <div className="competition-card-header">
-                          <span className="competition-card-index">
-                            / {String(i + 1).padStart(2, "0")}
-                          </span>
-                          <div className="competition-card-line" />
-                        </div>
-
-                        <h3 className="competition-card-title">{c.comp}</h3>
-
-                        <div className="competition-card-venue">
-                          <span className="venue-icon">◆</span>
-                          <p>{c.venue}</p>
-                        </div>
-
-                        <div className="competition-card-footer">
-                          <div className="competition-students">
-                            <span className="students-label">Participants</span>
-                            <span className="students-value">
-                              {c.students}
-                            </span>
-                          </div>
-
-                          <div
-                            className={`competition-award ${
-                              isWinner ? "award-winner" : ""
-                            }`}
-                          >
-                            <span className="award-label">Achievement</span>
-                            <span className="award-value">{c.award}</span>
-                          </div>
-                        </div>
+                  <article className="competition-card" key={c.comp}>
+                    <div className="competition-card-image">
+                      <img
+                        src={imageSrc}
+                        alt={c.comp}
+                        loading="lazy"
+                        onClick={() => setLightboxImage(imageSrc)}
+                        onError={(e) => {
+                          e.currentTarget.style.display = "none";
+                        }}
+                      />
+                    </div>
+                    <div className="competition-card-content">
+                      <h3>{c.comp}</h3>
+                      <p>{c.venue}</p>
+                      <div className="competition-card-footer">
+                        <span>{c.students}</span>
+                        <strong>{c.award}</strong>
                       </div>
                     </div>
                   </article>
                 );
               })}
             </div>
-
-            <div className="competition-summary">
-              <div className="summary-item">
-                <strong>05</strong>
-                <span>National Events</span>
-              </div>
-              <div className="summary-item">
-                <strong>99</strong>
-                <span>Students Mentored</span>
-              </div>
-              <div className="summary-item">
-                <strong>04</strong>
-                <span>Awards Won</span>
-              </div>
-              <div className="summary-item">
-                <strong>05</strong>
-                <span>Teams Led</span>
-              </div>
-            </div>
           </div>
         </section>
 
-        {/* ============================================================
-            WORKSHOPS
-        ============================================================ */}
+        {/* WORKSHOPS */}
         <section id="workshops" className="section">
           <div className="container">
             <SectionHeading
@@ -926,17 +750,15 @@ function App() {
 
             <div className="workshop-tabs">
               <button
-                className={`workshop-tab ${
-                  activeWorkshop === "organized" ? "active" : ""
-                }`}
+                className={`workshop-tab ${activeWorkshop === "organized" ? "active" : ""
+                  }`}
                 onClick={() => setActiveWorkshop("organized")}
               >
                 Organized <span>03</span>
               </button>
               <button
-                className={`workshop-tab ${
-                  activeWorkshop === "attended" ? "active" : ""
-                }`}
+                className={`workshop-tab ${activeWorkshop === "attended" ? "active" : ""
+                  }`}
                 onClick={() => setActiveWorkshop("attended")}
               >
                 Attended <span>15</span>
@@ -971,7 +793,6 @@ function App() {
                       <h3>{item.title}</h3>
                       <p>{item.venue}</p>
                     </div>
-                    <span>{String(i + 1).padStart(2, "0")}</span>
                   </article>
                 ))}
               </div>
@@ -979,9 +800,7 @@ function App() {
           </div>
         </section>
 
-        {/* ============================================================
-            RECORD
-        ============================================================ */}
+        {/* RECORD */}
         <section className="section record-section">
           <div className="container">
             <SectionHeading
@@ -1022,34 +841,37 @@ function App() {
         </section>
       </main>
 
-      {/* ============================================================
-          FOOTER
-      ============================================================ */}
-      <footer id="contact">
-        <div className="container">
+      {/* FOOTER */}
+      <footer id="contact" className="footer-dark">
+        <div className="dark-section-grid" aria-hidden="true" />
+        <div className="container relative-z">
           <div className="footer-main">
             <div>
               <p className="footer-label">11 / CONTACT</p>
-              <h2>
-                Let's connect<span>.</span>
-              </h2>
+              <h2>Let's connect.</h2>
               <p className="footer-description">
                 Open to teaching appointments and research collaboration in
                 materials engineering and additive manufacturing.
               </p>
-
               <div className="contact-list">
-                <Contact
-                  label="EMAIL"
-                  value="rajkmech42@gmail.com"
-                  href="mailto:rajkmech42@gmail.com"
-                />
-                <Contact label="LOCATION" value="Coimbatore, Tamil Nadu, India" />
+                <a href="mailto:rajkmech42@gmail.com" className="contact-link">
+                  <Mail className="w-4 h-4" />
+                  <span>rajkmech42@gmail.com</span>
+                </a>
+                <a
+                  href="https://linkedin.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="contact-link"
+                >
+                  <Linkedin className="w-4 h-4" />
+                  <span>LinkedIn Profile</span>
+                </a>
               </div>
             </div>
 
             <div className="quickfacts">
-              <p className="mini-title">QUICK FACTS</p>
+              <p className="mini-title">Quick Facts</p>
               <dl>
                 <dt>Mother tongue</dt>
                 <dd>Tamil</dd>
@@ -1064,30 +886,23 @@ function App() {
           </div>
 
           <div className="footer-bottom">
-            <span>RAJKUMAR V / CIET</span>
-            <span>© {new Date().getFullYear()}</span>
+            <span>© {new Date().getFullYear()} Dr. V. Rajkumar. All rights reserved.</span>
+            <span>Academic Portfolio</span>
           </div>
         </div>
       </footer>
 
-      {/* ============================================================
-          LIGHTBOX
-      ============================================================ */}
+      {/* LIGHTBOX */}
       {lightboxImage && (
         <div
           className="lightbox"
           onClick={() => setLightboxImage(null)}
           role="dialog"
           aria-modal="true"
-          aria-label="Image preview"
         >
           <button
             className="lightbox-close"
-            onClick={(e) => {
-              e.stopPropagation();
-              setLightboxImage(null);
-            }}
-            aria-label="Close"
+            onClick={() => setLightboxImage(null)}
           >
             ✕
           </button>
@@ -1097,10 +912,6 @@ function App() {
     </div>
   );
 }
-
-/* ============================================================
-   SUB-COMPONENTS
-   ============================================================ */
 
 function Stat({ number, label }) {
   return (
@@ -1162,15 +973,6 @@ function RecordColumn({ title, items }) {
           <li key={item}>{item}</li>
         ))}
       </ul>
-    </div>
-  );
-}
-
-function Contact({ label, value, href }) {
-  return (
-    <div className="contact-item">
-      <span>{label}</span>
-      {href ? <a href={href}>{value}</a> : <p>{value}</p>}
     </div>
   );
 }
