@@ -1,12 +1,14 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* Tailwind v4 — load ONLY theme + utilities, skip preflight reset
+   to avoid fighting with App.css's own global reset & typography. */
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities);
 
-/* Custom cinematic utilities */
 @layer utilities {
-  .bg-cinematic-dark { @apply bg-gray-900; }
-  .text-primary { @apply text-indigo-300; }
-  .bg-primary { @apply bg-indigo-800; }
-  .border-primary { @apply border-indigo-600; }
-  .shadow-cinematic { @apply shadow-[0_10px_30px_rgba(0,0,0,0.12),_0_4px_12px_rgba(0,0,0,0.08)]; }
+  @keyframes pulseGlow {
+    0%, 100% { opacity: 0.35; transform: scale(1); }
+    50% { opacity: 0.6; transform: scale(1.05); }
+  }
+  .animate-pulse-glow {
+    animation: pulseGlow 7s ease-in-out infinite;
+  }
 }

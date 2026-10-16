@@ -1,7 +1,9 @@
 // App.jsx — Mobile navigation synced version
 import React, { useEffect, useRef, useState, useMemo } from "react";
 import { Mail, Linkedin } from "lucide-react";
+import HeroSection from "./HeroSection.jsx";
 import "./App.css";
+
 
 import {
   publications,
@@ -257,86 +259,7 @@ function App() {
 
       <main id="top">
         {/* HERO */}
-        <section className="hero" ref={heroRef}>
-          <div className="hero-background" aria-hidden="true" />
-          <div className="hero-grid" aria-hidden="true" />
-
-          <div className="container hero-container">
-            <div className="hero-content">
-              <div className="hero-left professional-hero-layout">
-                <div className="hero-title-wrapper animate-slide-up">
-                  <h1>
-                    Rajkumar <em>Vasu</em>
-                  </h1>
-                </div>
-
-                <div className="hero-role-wrapper animate-slide-up-delay">
-                  <div className="hero-role">
-                    Associate Professor of Mechanical &amp; Mechatronics
-                    Engineering
-                  </div>
-                </div>
-
-                <div className="hero-typing-wrapper animate-fade-in-delay-2">
-                  <p className="typing-text" />
-                  <span className="typing-cursor">|</span>
-                </div>
-
-                <p className="hero-description animate-fade-in-delay-3">
-                  Researching wire arc additive manufacturing, welding
-                  metallurgy, and hot corrosion behaviour of superalloys.
-                </p>
-
-                <div className="hero-line animate-width" />
-
-                <p className="hero-quote animate-fade-in-delay-4">
-                  “Seeking appointment offering challenges and responsibility
-                  to commensurate with teaching skills and experience.”
-                </p>
-
-                <div className="hero-actions animate-fade-in-delay-5">
-                  <a href="#research" className="hero-button">
-                    Explore research
-                    <span aria-hidden="true">↗</span>
-                  </a>
-                  <div className="hero-scroll-indicator">
-                    <span>Scroll</span>
-                    <div className="scroll-line">
-                      <div className="scroll-dot" />
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="hero-photo animate-slide-up-delay-2">
-                <div className="hero-photo-wrapper">
-                  <div className="hero-photo-frame">
-                    <img
-                      src="/rajkumar.png"
-                      alt="Dr. V. Rajkumar"
-                      className="hero-profile-image"
-                      onError={(e) => {
-                        e.currentTarget.style.display = "none";
-                      }}
-                    />
-                  </div>
-                </div>
-
-                <div className="hero-photo-badge">
-                  <span aria-hidden="true">✦</span>
-                  <span>13+ Years</span>
-                </div>
-              </div>
-            </div>
-
-            <div className="hero-stats animate-fade-in-delay-6">
-              <Stat number="13+" label="Years in academia" />
-              <Stat number="18" label="Peer-reviewed publications" />
-              <Stat number="4" label="PhD scholars guided" />
-              <Stat number="99" label="Students mentored" />
-            </div>
-          </div>
-        </section>
+        <HeroSection heroRef={heroRef} />
 
         {/* ABOUT */}
         <section id="about" className="section about-section">
